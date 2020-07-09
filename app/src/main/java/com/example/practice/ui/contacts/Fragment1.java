@@ -32,7 +32,7 @@ public class Fragment1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, null) ;
+        View view = inflater.inflate(R.layout.fragment1, null) ;
         // get the reference of RecyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         // set a LinearLayoutManager with default vertical orientation
