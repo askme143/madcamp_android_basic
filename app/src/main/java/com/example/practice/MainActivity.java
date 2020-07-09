@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.practice.ui.contacts.Fragment1;
+import com.example.practice.ui.free.Fragment3;
 import com.example.practice.ui.gallery.Fragment2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private Fragment1 fragment1;
     private Fragment2 fragment2;
+    private Fragment3 fragment3;
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     @Override
@@ -60,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.tab2:{
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frameLayout, fragment2).commitAllowingStateLoss();
+                        return true;
+                    }
+                    case R.id.tab3:{
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frameLayout, fragment3).commitAllowingStateLoss();
                         return true;
                     }
                     default: return false;
