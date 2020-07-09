@@ -20,7 +20,6 @@ public class FullImageActivity extends Activity {
         // get intent data
         Intent i = getIntent();
 
-        int cellSize = this.getResources().getDisplayMetrics().widthPixels;
         // Selected image id
         int position = i.getExtras().getInt("id");
 
