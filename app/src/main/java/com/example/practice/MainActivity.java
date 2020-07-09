@@ -5,10 +5,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.practice.ui.contacts.Fragment1;
 import com.example.practice.ui.gallery.Fragment2;
@@ -38,11 +34,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
                 switch (menuItem.getItemId()){
                     case R.id.tab1:{
+                        System.out.println("1");
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frameLayout, fragment1).commitAllowingStateLoss();
                         return true;
                     }
                     case R.id.tab2:{
+                        System.out.println("2");
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frameLayout, fragment2).commitAllowingStateLoss();
                         return true;

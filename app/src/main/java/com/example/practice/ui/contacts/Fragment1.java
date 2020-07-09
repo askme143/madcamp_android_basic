@@ -24,7 +24,6 @@ public class Fragment1 extends Fragment {
     ArrayList<String> phoneNumbers = new ArrayList<>();
 
     public Fragment1 () {
-
     }
 
     @Override
