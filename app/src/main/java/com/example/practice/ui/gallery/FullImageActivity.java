@@ -17,9 +17,10 @@ public class FullImageActivity extends Activity {
         // get intent data
         Intent i = getIntent();
 
+        int cellSize = this.getResources().getDisplayMetrics().widthPixels;
         // Selected image id
         int position = i.getExtras().getInt("id");
-        ImageAdapter imageAdapter = new ImageAdapter(this);
+        ImageAdapter imageAdapter = new ImageAdapter(this, cellSize);
 
         ImageView imageView = (ImageView) findViewById(R.id.full_image_view);
         imageView.setImageResource(imageAdapter.mThumbIds[position]);

@@ -12,7 +12,7 @@ import com.example.practice.R;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-
+    private int mCellSize;
 
     // Keep all Images in array
     public Integer[] mThumbIds = {
@@ -27,8 +27,9 @@ public class ImageAdapter extends BaseAdapter {
     };
 
     // Constructor
-    public ImageAdapter(Context c){
+    public ImageAdapter(Context c, int cellSize){
         mContext = c;
+        mCellSize = cellSize;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(mThumbIds[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setLayoutParams(new GridView.LayoutParams(350, 350));
+        imageView.setLayoutParams(new GridView.LayoutParams(mCellSize, mCellSize));
         return imageView;
     }
 

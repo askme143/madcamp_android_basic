@@ -89,7 +89,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     }
 
     private void changeVisibility(final View v, final boolean isExpanded) {
-        ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, 80) : ValueAnimator.ofInt(80, 0);
+        float d = context.getResources().getDisplayMetrics().density;
+        ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, (int) (40 * d)) : ValueAnimator.ofInt((int) (40 * d), 0);
         int duration = isExpanded ? 60 : 1;
 
         va.setDuration(duration);

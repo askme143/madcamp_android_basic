@@ -26,8 +26,10 @@ public class Fragment2 extends Fragment {
 
         GridView gridView = (GridView) view.findViewById(R.id.grid_view);
 
+        int mCellSize = (this.getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
+
         // Instance of ImageAdapter Class
-        gridView.setAdapter(new ImageAdapter(getActivity()));
+        gridView.setAdapter(new ImageAdapter(getActivity(), mCellSize));
 
         //// On Click event for Single GridView Item ////
         gridView.setOnItemClickListener(new OnItemClickListener() {
