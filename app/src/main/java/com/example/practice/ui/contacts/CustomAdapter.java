@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +92,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     private void changeVisibility(final View v, final boolean isExpanded) {
         float d = context.getResources().getDisplayMetrics().density;
-        ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, (int) (40 * d)) : ValueAnimator.ofInt((int) (40 * d), 0);
+        ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, (int) (60 * d)) : ValueAnimator.ofInt((int) (60 * d), 0);
         int duration = isExpanded ? 60 : 1;
 
         va.setDuration(duration);
@@ -115,7 +116,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private static final String TAG = "MainActivity";
         TextView name, phone_number;// init the item view's
-        LinearLayout hidden_layer;
+        RelativeLayout hidden_layer;
+        View line;
         ImageButton call, message;
 
         public MyViewHolder(View itemView) {
@@ -124,7 +126,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             // get the reference of item view's
             name = (TextView) itemView.findViewById(R.id.name);
             phone_number = (TextView) itemView.findViewById(R.id.phoneNumber);
-            hidden_layer = (LinearLayout) itemView.findViewById(R.id.hiddenButtons);
+            hidden_layer = (RelativeLayout) itemView.findViewById(R.id.hiddenButtons);
+            line = (View) itemView.findViewById(R.id.line);
             call = (ImageButton) itemView.findViewById(R.id.call);
             message = (ImageButton) itemView.findViewById(R.id.message);
         }
