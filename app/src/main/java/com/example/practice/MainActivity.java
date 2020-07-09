@@ -1,6 +1,7 @@
 package com.example.practice;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -41,29 +42,22 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             }
+        } else {
+            startFragment();
         }
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
-        fragment1 = new Fragment1();
-        fragment2 = new Fragment2();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1)
-                .commitAllowingStateLoss();
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView
                 .OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
                 switch (menuItem.getItemId()){
                     case R.id.tab1:{
-                        System.out.println("1");
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frameLayout, fragment1).commitAllowingStateLoss();
                         return true;
                     }
                     case R.id.tab2:{
-                        System.out.println("2");
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frameLayout, fragment2).commitAllowingStateLoss();
                         return true;
@@ -81,16 +75,22 @@ public class MainActivity extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
-
+                    startFragment();
                 } else {
                     Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
                 }
-                return;
             }
 
         }
+    }
+
+    private void startFragment() {
+        fragment1 = new Fragment1();
+        fragment2 = new Fragment2();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1)
+                .commitAllowingStateLoss();
     }
 }

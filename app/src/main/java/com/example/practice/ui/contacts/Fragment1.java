@@ -42,24 +42,24 @@ public class Fragment1 extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()); // .getApplicationContext???
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        if (personNames.size() == 0) {
-            try {
-                // get JSONObject from JSON file
-                JSONObject obj = new JSONObject(loadJSONFromAsset());
-                // fetch JSONArray named users
-                JSONArray userArray = obj.getJSONArray("People");
-                // implement for loop for getting users list data
-                for (int i = 0; i < userArray.length(); i++) {
-                    // create a JSONObject for fetching single user data
-                    JSONObject userDetail = userArray.getJSONObject(i);
-                    // fetch email and name and store it in arraylist
-                    personNames.add(userDetail.getString("name"));
-                    phoneNumbers.add(userDetail.getString("phone_number"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (personNames.size() == 0) {
+//            try {
+//                // get JSONObject from JSON file
+//                JSONObject obj = new JSONObject(loadJSONFromAsset());
+//                // fetch JSONArray named users
+//                JSONArray userArray = obj.getJSONArray("People");
+//                // implement for loop for getting users list data
+//                for (int i = 0; i < userArray.length(); i++) {
+//                    // create a JSONObject for fetching single user data
+//                    JSONObject userDetail = userArray.getJSONObject(i);
+//                    // fetch email and name and store it in arraylist
+//                    personNames.add(userDetail.getString("name"));
+//                    phoneNumbers.add(userDetail.getString("phone_number"));
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         contactList = getContactList();
 
@@ -70,21 +70,21 @@ public class Fragment1 extends Fragment {
         return view;
     }
 
-    public String loadJSONFromAsset() {
-        String json = null;
-        try {
-            InputStream is = getActivity().getAssets().open("phone_num.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
-    }
+//    public String loadJSONFromAsset() {
+//        String json = null;
+//        try {
+//            InputStream is = getActivity().getAssets().open("phone_num.json");
+//            int size = is.available();
+//            byte[] buffer = new byte[size];
+//            is.read(buffer);
+//            is.close();
+//            json = new String(buffer, "UTF-8");
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            return null;
+//        }
+//        return json;
+//    }
 
     public ArrayList<Contact> getContactList() {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
