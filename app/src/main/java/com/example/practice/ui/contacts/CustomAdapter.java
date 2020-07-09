@@ -25,16 +25,14 @@ import java.util.ArrayList;
 
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
-    private ArrayList<String> personNames;
-    private ArrayList<String> phoneNumbers;
+    private ArrayList<Contact> contactList;
     private Context context;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
     private int prePosition = -1;
 
-    public CustomAdapter(Context context, ArrayList<String> personNames, ArrayList<String> phoneNumbers) {
+    public CustomAdapter(Context context, ArrayList<Contact> contactList) {
         this.context = context;
-        this.personNames = personNames;
-        this.phoneNumbers = phoneNumbers;
+        this.contactList = contactList;
     }
 
     @NonNull
@@ -47,8 +45,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.name.setText(personNames.get(position));
-        holder.phone_number.setText(phoneNumbers.get(position));
+        final Contact contact = contactList.get(position);
+        holder.name.setText(contact.getName());
+        holder.phone_number.setText(contact.getPhoneNumber());
         changeVisibility(holder.hidden_layer, selectedItems.get(position));
 
         // implement setOnClickListener event on item view.
@@ -72,7 +71,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         holder.call.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:".concat(phoneNumbers.get(position))));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+                        + contact.getPhoneNumber()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -81,7 +81,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         holder.message.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:".concat(phoneNumbers.get(position))));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
+                        + contact.getPhoneNumber()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -108,7 +109,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return personNames.size();
+        return contactList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
