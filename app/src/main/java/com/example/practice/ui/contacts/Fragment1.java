@@ -23,10 +23,8 @@ public class Fragment1 extends Fragment {
     ArrayList<String> personNames = new ArrayList<>();
     ArrayList<String> phoneNumbers = new ArrayList<>();
 
+    public Fragment1 () {
 
-    private HomeViewModel homeViewModel;
-
-    public Fragment1() {
     }
 
     @Override
@@ -39,21 +37,23 @@ public class Fragment1 extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()); // .getApplicationContext???
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        try {
-            // get JSONObject from JSON file
-            JSONObject obj = new JSONObject(loadJSONFromAsset());
-            // fetch JSONArray named users
-            JSONArray userArray = obj.getJSONArray("People");
-            // implement for loop for getting users list data
-            for (int i = 0; i < userArray.length(); i++) {
-                // create a JSONObject for fetching single user data
-                JSONObject userDetail = userArray.getJSONObject(i);
-                // fetch email and name and store it in arraylist
-                personNames.add(userDetail.getString("name"));
-                phoneNumbers.add(userDetail.getString("phone_number"));
+        if (personNames.size() == 0) {
+            try {
+                // get JSONObject from JSON file
+                JSONObject obj = new JSONObject(loadJSONFromAsset());
+                // fetch JSONArray named users
+                JSONArray userArray = obj.getJSONArray("People");
+                // implement for loop for getting users list data
+                for (int i = 0; i < userArray.length(); i++) {
+                    // create a JSONObject for fetching single user data
+                    JSONObject userDetail = userArray.getJSONObject(i);
+                    // fetch email and name and store it in arraylist
+                    personNames.add(userDetail.getString("name"));
+                    phoneNumbers.add(userDetail.getString("phone_number"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
         //  call the constructor of CustomAdapter to send the reference and data to Adapter

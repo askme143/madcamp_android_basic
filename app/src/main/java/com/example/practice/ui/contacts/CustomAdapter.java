@@ -1,12 +1,14 @@
 package com.example.practice.ui.contacts;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.practice.R;
 
@@ -30,7 +32,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // infalte the item Layout
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.rowlayout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment1_row, parent, false);
         MyViewHolder vh = new MyViewHolder(v); // pass the view to View Holder
         return vh;
     }
@@ -51,13 +53,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     }
 
-
     @Override
     public int getItemCount() {
         return personNames.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        private static final String TAG = "MainActivity";
         TextView name, phone_number;// init the item view's
 
         public MyViewHolder(View itemView) {
@@ -65,8 +67,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
             // get the reference of item view's
             name = (TextView) itemView.findViewById(R.id.name);
-            phone_number = (TextView) itemView.findViewById(R.id.phone_number);
+            phone_number = (TextView) itemView.findViewById(R.id.phoneNumber);
 
+            System.out.println("hello");
+            // Item click event listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Click!");
+                    Log.d(TAG, "click");
+
+                    // TODO : process click event.
+                }
+            });
         }
     }
 }

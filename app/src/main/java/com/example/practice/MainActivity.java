@@ -1,17 +1,18 @@
 package com.example.practice;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.practice.ui.contacts.Fragment1;
 import com.example.practice.ui.gallery.Fragment2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import com.example.practice.ui.contacts.Fragment1;
-import com.example.practice.ui.gallery.Fragment2;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
