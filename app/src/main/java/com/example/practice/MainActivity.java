@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private void startFragment() {
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1)
                 .commitAllowingStateLoss();
