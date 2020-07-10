@@ -12,4 +12,9 @@
         android:icon="@drawable/gallery"
         android:enabled="true"
         android:title="Gallery"/>
+    <item android:id="@+id/tab3"
+        app:showAsAction="always"
+        android:icon="@drawable/gallery"
+        android:enabled="true"
+        android:title="Free"/>
 </menu>
