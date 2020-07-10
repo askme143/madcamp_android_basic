@@ -3,6 +3,7 @@ package com.example.practice.ui.health;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -17,21 +18,24 @@ import com.samsung.android.sdk.healthdata.HealthResultHolder;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
-public class StepHolder {
+public class StepHolder extends HealthHolder {
+    private static final int type = 0;
+
     private HealthDataStore mStore;
     private View mView;
 
-    private TextView mTextView1;
+    private TextView mStepCount;
+    private ProgressBar mStepProgress;
 
-    public StepHolder(HealthDataStore store, View view) {
+    public StepHolder(HealthDataStore store) {
         mStore = store;
-        mView = view;
-
-        mTextView1 = view.findViewById(R.id.stepCount);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void show() {
+    void show(View view) {
+        mStepCount = (TextView) view.findViewById(R.id.stepCount);
+        mStepProgress = (ProgressBar) view.findViewById(R.id.stepProgress);
+
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
         long startTime = getStartTimeOfToday();
@@ -49,6 +53,8 @@ public class StepHolder {
         }
     }
 
+    int getType() { return type; }
+
     private final HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mRdResult =
             new HealthResultHolder.ResultListener<HealthDataResolver.ReadResult>() {
                 @SuppressLint("SetTextI18n")
@@ -63,7 +69,8 @@ public class StepHolder {
                         }
                     } finally {
                         healthData.close();
-                        mTextView1.setText(Integer.toString(count));
+                        mStepCount.setText(Integer.toString(count));
+                        mStepProgress.setProgress(count / 60);
                     }
                 }
             };

@@ -1,6 +1,7 @@
 package com.example.practice.ui.health;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -18,22 +19,21 @@ import com.samsung.android.sdk.healthdata.HealthResultHolder;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class SleepHolder {
+public class SleepHolder extends HealthHolder {
+    private static final int type = 1;
+
     private HealthDataStore mStore;
-    private View mView;
 
     private TextView mTextView1;
 
-    public SleepHolder(HealthDataStore store, View view) {
+    public SleepHolder(HealthDataStore store) {
         mStore = store;
-        mView = view;
-
-        mTextView1 = view.findViewById(R.id.sleepTime);
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void show() {
+    void show(View view) {
+        mTextView1 = (TextView) view.findViewById(R.id.sleepTime);
+
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
         long startTime = getSleepStartTime();
@@ -50,6 +50,8 @@ public class SleepHolder {
             e.printStackTrace();
         }
     }
+
+    int getType() { return type; }
 
     private final HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mRdResult =
             new HealthResultHolder.ResultListener<HealthDataResolver.ReadResult>() {

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -31,11 +32,13 @@ import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
 import com.example.practice.R;
 
+import java.lang.reflect.Array;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,8 +55,7 @@ public class Fragment3 extends Fragment {
     private HealthDataStore mStore = null;
     private HealthConnectionErrorResult mConnectionErrorResult;
 
-    private StepHolder mStepHolder = null;
-    private SleepHolder mSleepHolder = null;
+    private ArrayList<HealthHolder> mHealthHolderList;
 
     public Fragment3 () {
     }
@@ -76,17 +78,24 @@ public class Fragment3 extends Fragment {
         mKeySet.add (new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
 
         mStore = new HealthDataStore(getActivity(), mConnectionListener);
-        mStepHolder = new StepHolder(mStore, mView);
-        mSleepHolder = new SleepHolder(mStore, mView);
         mStore.connectService();
+
+        mHealthHolderList = new ArrayList<>();
+        mHealthHolderList.add(new StepHolder(mStore));
+        mHealthHolderList.add(new SleepHolder(mStore));
+
+        HealthAdapter healthAdapter = new HealthAdapter(mHealthHolderList);
+        ListView listView = (ListView) mView.findViewById(R.id.listView);
+        listView.setAdapter(healthAdapter);
 
         return mView;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showContent() {
-        mStepHolder.show();
-        mSleepHolder.show();
+        for (HealthHolder healthHolder : mHealthHolderList) {
+            healthHolder.show(mView);
+        }
     }
 
     private final HealthDataStore.ConnectionListener mConnectionListener = new HealthDataStore.ConnectionListener() {
@@ -101,6 +110,7 @@ public class Fragment3 extends Fragment {
                 if (resultMap.containsValue(Boolean.FALSE)) {
                     permissionManager.requestPermissions(mKeySet, (Activity) getContext()).setResultListener(mPermissionListener);
                 } else {
+                    System.out.println("YAA!!\n");
                     showContent();
                 }
             } catch (Exception e) {
