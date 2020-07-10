@@ -18,11 +18,20 @@
         tools:context="com.example.madwin.listviewexample1.MainActivity"
         tools:showIn="@layout/activity_main">
 
+        <ListView
+            android:id="@+id/retrieve_ListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="5dp"/>
+            android:paddingHorizontal="5dp"
+            android:layout_alignTop="@+id/retrieve_ListView"
+            />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

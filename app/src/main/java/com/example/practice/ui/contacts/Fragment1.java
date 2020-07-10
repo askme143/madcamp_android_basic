@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +35,8 @@ public class Fragment1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment1, null) ;
+
+        ListView listView = (ListView) view.findViewById(R.id.retrieve_ListView);
         // get the reference of RecyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         // set a LinearLayoutManager with default vertical orientation
