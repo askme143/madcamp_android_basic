@@ -17,7 +17,6 @@ import com.example.practice.ui.contacts.Fragment1;
 import com.example.practice.ui.free.Fragment3;
 import com.example.practice.ui.gallery.Fragment2;
 
-import com.example.practice.contacts.Fragment1;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
