@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.practice.R;
 
-public class Fragment1 extends Fragment {
+public class :w:Fragment1 extends Fragment {
     ViewGroup viewGroup;
 
     @Nullable
