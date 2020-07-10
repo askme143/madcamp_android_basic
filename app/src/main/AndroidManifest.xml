@@ -18,7 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.gallery.FullImageActivity"></activity>
+        <activity android:name=".ui.gallery.FullImageActivity" />
+        <activity android:name=".ui.free.SamsungPermissionRequest" />
+        <meta-data android:name="com.samsung.android.health.permission.read"
+            android:value="com.samsung.health.step_count"/>
     </application>
 
 </manifest>

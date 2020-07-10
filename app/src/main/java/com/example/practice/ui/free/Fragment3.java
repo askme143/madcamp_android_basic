@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,34 +57,18 @@ public class Fragment3 extends Fragment {
     public Fragment3 () {
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        mContext = context;
-//
-//        if (context instanceof Activity)
-//            mActivity = (Activity) context;
-//
-//        mKeySet = new HashSet<>();
-//
-//        mKeySet.add (new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
-//        mStore = new HealthDataStore(context, mConnectionListener);
-//        System.out.println(context);
-//    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-//        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment3, null);
-//        return viewGroup;
         mView = inflater.inflate(R.layout.fragment3, container, false);
-        mTextView = mView.findViewById(R.id.stepCount);
+        mTextView = mView.findViewById(R.id.StepCount);
 
         mKeySet = new HashSet<>();
 
         mKeySet.add (new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
         mStore = new HealthDataStore(getActivity(), mConnectionListener);
+        mStore.connectService();
 
         System.out.println(getActivity());
 
@@ -100,7 +85,9 @@ public class Fragment3 extends Fragment {
                 Map<PermissionKey, Boolean> resultMap = permissionManager.isPermissionAcquired(mKeySet);
 
                 if (resultMap.containsValue(Boolean.FALSE)) {
-                    permissionManager.requestPermissions(mKeySet, getActivity()).setResultListener(mPermissionListener);
+//                    permissionManager.requestPermissions(mKeySet, (Activity) getContext()).setResultListener(mPermissionListener);
+                    Intent i = new Intent(getActivity(), SamsungPermissionRequest.class);
+                    startActivity(i);
                 } else {
                     showStepCount();
                 }
@@ -112,7 +99,6 @@ public class Fragment3 extends Fragment {
 
         @Override
         public void onConnectionFailed(HealthConnectionErrorResult healthConnectionErrorResult) {
-
             Log.d(APP_TAG, "Health data service is not available.");
             showConnectionFailureDialog(healthConnectionErrorResult);
         }
