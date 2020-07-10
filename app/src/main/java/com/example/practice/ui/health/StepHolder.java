@@ -70,7 +70,7 @@ public class StepHolder extends HealthHolder {
                     } finally {
                         healthData.close();
                         mStepCount.setText(count+" / 6000");
-                        mStepProgress.setProgress(count / 60);
+                        mStepProgress.setProgress(count / 60 == 0 ? 1 : count / 60);
                     }
                 }
             };
