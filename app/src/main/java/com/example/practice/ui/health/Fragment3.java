@@ -1,10 +1,11 @@
-package com.example.practice.ui.free;
+package com.example.practice.ui.health;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.practice.MainActivity;
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
 import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthData;
@@ -34,45 +34,59 @@ import com.example.practice.R;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class Fragment3 extends Fragment {
-    public static final String APP_TAG = "TestHealthApp";
+    public static final String TAB_TAG = "TestHealthApp";
 
     private View mView;
-    private TextView mTextView;
-
-    private Context mContext;
-    private Activity mActivity;
 
     private Set<PermissionKey> mKeySet;
-    private HealthDataStore mStore;
+    private HealthDataStore mStore = null;
     private HealthConnectionErrorResult mConnectionErrorResult;
-    private static Activity resolveActivity = null;    // e.g. Move to install Samsung Health
+
+    private StepHolder mStepHolder = null;
+    private SleepHolder mSleepHolder = null;
 
     public Fragment3 () {
     }
 
+    @Override
+    public void onDestroyView() {
+        mStore.disconnectService();
+        super.onDestroyView();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment3, container, false);
-        mTextView = mView.findViewById(R.id.StepCount);
 
         mKeySet = new HashSet<>();
-
         mKeySet.add (new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
+        mKeySet.add (new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
+
         mStore = new HealthDataStore(getActivity(), mConnectionListener);
+        mStepHolder = new StepHolder(mStore, mView);
+        mSleepHolder = new SleepHolder(mStore, mView);
         mStore.connectService();
 
-        System.out.println(getActivity());
-
         return mView;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showContent() {
+        mStepHolder.show();
+        mSleepHolder.show();
     }
 
     private final HealthDataStore.ConnectionListener mConnectionListener = new HealthDataStore.ConnectionListener() {
@@ -85,31 +99,30 @@ public class Fragment3 extends Fragment {
                 Map<PermissionKey, Boolean> resultMap = permissionManager.isPermissionAcquired(mKeySet);
 
                 if (resultMap.containsValue(Boolean.FALSE)) {
-//                    permissionManager.requestPermissions(mKeySet, (Activity) getContext()).setResultListener(mPermissionListener);
-                    Intent i = new Intent(getActivity(), SamsungPermissionRequest.class);
-                    startActivity(i);
+                    permissionManager.requestPermissions(mKeySet, (Activity) getContext()).setResultListener(mPermissionListener);
                 } else {
-                    showStepCount();
+                    showContent();
                 }
             } catch (Exception e) {
-                Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
-                Log.e(APP_TAG, "Permission setting fails.");
+                Log.e(TAB_TAG, e.getClass().getName() + " - " + e.getMessage());
+                Log.e(TAB_TAG, "Permission setting fails.");
             }
         };
 
         @Override
         public void onConnectionFailed(HealthConnectionErrorResult healthConnectionErrorResult) {
-            Log.d(APP_TAG, "Health data service is not available.");
+            Log.d(TAB_TAG, "Health data service is not available.");
             showConnectionFailureDialog(healthConnectionErrorResult);
         }
 
         @Override
         public void onDisconnected() {
-            Log.d(APP_TAG, "Health data service is disconnected.");
+            Log.d(TAB_TAG, "Health data service is disconnected.");
         }
+
     };
 
-    private void showConnectionFailureDialog(HealthConnectionErrorResult error) {
+    private void showConnectionFailureDialog(final HealthConnectionErrorResult error) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         mConnectionErrorResult = error;
         String message = "Connection with Samsung Health is not available.";
@@ -140,7 +153,11 @@ public class Fragment3 extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (mConnectionErrorResult.hasResolution()) {
-                    mConnectionErrorResult.resolve(resolveActivity);
+                    if (error.getErrorCode() == HealthConnectionErrorResult.PLATFORM_NOT_INSTALLED) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=com.sec.android.app.shealth&hl=en_US")));
+                        System.exit(0);
+                    }
                 }
             }
         });
@@ -152,84 +169,19 @@ public class Fragment3 extends Fragment {
         alert.show();
     }
 
-    @Override
-    public void onDestroyView() {
-        mStore.disconnectService();
-        super.onDestroyView();
-    }
-
     private final HealthResultHolder.ResultListener<HealthPermissionManager.PermissionResult> mPermissionListener =
             new HealthResultHolder.ResultListener<HealthPermissionManager.PermissionResult>() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onResult(HealthPermissionManager.PermissionResult permissionResult) {
-                    Log.d(APP_TAG, "Permission callback is received.");
+                    Log.d(TAB_TAG, "Permission callback is received.");
                     Map<PermissionKey, Boolean> resultMap = permissionResult.getResultMap();
 
                     if (resultMap.containsValue(Boolean.FALSE)) {
-                        Log.i(APP_TAG, "Permission denied");
+                        Log.i(TAB_TAG, "Permission denied");
                     } else {
-                        showStepCount();
+                        showContent();
                     }
                 }
             };
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void showStepCount() {
-        HealthDataResolver resolver = new HealthDataResolver(mStore, null);
-
-        long startTime = getStartTimeOfToday();
-        long endTime = startTime + ONE_DAY_IN_MILLIS;
-
-        HealthDataResolver.ReadRequest request = new HealthDataResolver.ReadRequest.Builder()
-                .setDataType(HealthConstants.StepCount.HEALTH_DATA_TYPE)
-                .setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
-                        startTime, endTime)
-                .build();
-        try {
-            resolver.read(request).setResultListener(mRdResult);
-        } catch (Exception e) {
-            Log.i(APP_TAG, "Reading health data fails.");
-            e.printStackTrace();
-        }
-    }
-
-    private final HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mRdResult =
-            new HealthResultHolder.ResultListener<HealthDataResolver.ReadResult>() {
-                @SuppressLint("SetTextI18n")
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onResult(HealthDataResolver.ReadResult healthData) {
-                    int count = 0;
-
-                    try {
-                        Iterator<HealthData> iterator = healthData.iterator();
-                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-                        while (iterator.hasNext()) {
-                            HealthData data = iterator.next();
-
-                            String start = dtf.format(Instant.ofEpochMilli(data.getLong(HealthConstants.StepCount.START_TIME)).atZone(ZoneOffset.UTC));
-                            String end = dtf.format(Instant.ofEpochMilli(data.getLong(HealthConstants.StepCount.END_TIME)).atZone(ZoneOffset.UTC));
-
-                            Log.i(APP_TAG, "======= { steps: " + data.getInt(HealthConstants.StepCount.COUNT)
-                                    + ", start: " + start
-                                    + ", end: " + end + " } ");
-
-                            count += data.getInt(HealthConstants.StepCount.COUNT);
-                        }
-                    } finally {
-                        healthData.close();
-                        Log.i(APP_TAG, "======= Total step count: " + count);
-                        mTextView.setText(Integer.toString(count));
-                    }
-                }
-            };
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private long getStartTimeOfToday() {
-        return LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000;
-    }
-
-    private static final long ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000L;
 }
