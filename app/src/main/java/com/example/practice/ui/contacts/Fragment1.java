@@ -37,7 +37,7 @@ public class Fragment1 extends Fragment {
         // get the reference of RecyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         // set a LinearLayoutManager with default vertical orientation
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()); // .getApplicationContext???
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
         contactList = getContactList();
