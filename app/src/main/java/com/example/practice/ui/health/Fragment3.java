@@ -100,7 +100,6 @@ public class Fragment3 extends Fragment implements SensorEventListener {
         mStepHolder = new StepHolder(mStore);
         mHealthHolderList.add(mStepHolder);
         mHealthHolderList.add(new SleepHolder(mStore));
-//        mHealthHolderList.add(new DailyStepHolder(mStore));
 
         HealthAdapter healthAdapter = new HealthAdapter(mHealthHolderList);
         ListView listView = (ListView) mView.findViewById(R.id.listView);

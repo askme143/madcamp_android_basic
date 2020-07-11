@@ -45,11 +45,6 @@ public class Fragment1 extends Fragment {
 
         final String searchContent = editText.getText().toString();
 
-//        // Retrieved Contacts recycler view area
-//        final RecyclerView recyclerView_retrieve = (RecyclerView) view.findViewById(R.id.retrieve_ListView);
-//        final LinearLayoutManager linearLayoutManager_retrieve = new LinearLayoutManager(getActivity());
-//        recyclerView_retrieve.setLayoutManager(linearLayoutManager_retrieve);
-
         // Total Contacts recycler view area
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -123,7 +118,6 @@ public class Fragment1 extends Fragment {
 
                 if (phoneNumber.startsWith("01")) {
                     hashSet.add(contact);
-                    //contactsList.add(myContact);
                 }
 
             } while (cursor.moveToNext());

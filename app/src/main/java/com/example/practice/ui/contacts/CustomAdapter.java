@@ -77,12 +77,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             }
         }
 
-
-
-
-
-        /////////////////////////////////////////////////////////////////
-
         changeVisibility(holder.hidden_layer, selectedItems.get(position));
 
 
