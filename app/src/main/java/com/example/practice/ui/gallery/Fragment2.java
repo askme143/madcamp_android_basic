@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 
 import com.example.practice.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Fragment2 extends Fragment {
     ViewGroup viewGroup;
@@ -42,6 +43,15 @@ public class Fragment2 extends Fragment {
                 // passing array index
                 i.putExtra("id", position);
                 startActivity(i);
+            }
+        });
+
+        FloatingActionButton fab = view.findViewById(R.id.cameraIcon);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // OCR
+
             }
         });
 
