@@ -18,11 +18,27 @@
         tools:context="com.example.madwin.listviewexample1.MainActivity"
         tools:showIn="@layout/activity_main">
 
-        <ListView
-            android:id="@+id/retrieve_ListView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="5dp"/>
+            android:orientation="horizontal"
+            android:id="@+id/search_box"
+            >
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_height="50dp"
+                android:layout_width="50dp"
+                android:src="@drawable/search"
+                android:padding="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/search_bar"/>
+
+        </LinearLayout>
+
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -30,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="5dp"
-            android:layout_alignTop="@+id/retrieve_ListView"
+            android:layout_below="@+id/search_box"
             />
     </RelativeLayout>
 

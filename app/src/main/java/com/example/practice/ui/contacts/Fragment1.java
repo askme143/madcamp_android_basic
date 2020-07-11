@@ -5,9 +5,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -36,10 +41,17 @@ public class Fragment1 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment1, null) ;
 
-        ListView listView = (ListView) view.findViewById(R.id.retrieve_ListView);
-        // get the reference of RecyclerView
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        // set a LinearLayoutManager with default vertical orientation
+        final EditText editText = (EditText) view.findViewById(R.id.search_bar);
+
+        final String searchContent = editText.getText().toString();
+
+//        // Retrieved Contacts recycler view area
+//        final RecyclerView recyclerView_retrieve = (RecyclerView) view.findViewById(R.id.retrieve_ListView);
+//        final LinearLayoutManager linearLayoutManager_retrieve = new LinearLayoutManager(getActivity());
+//        recyclerView_retrieve.setLayoutManager(linearLayoutManager_retrieve);
+
+        // Total Contacts recycler view area
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -49,6 +61,36 @@ public class Fragment1 extends Fragment {
         CustomAdapter customAdapter = new CustomAdapter(getActivity(), contactList);
         recyclerView.setAdapter(customAdapter); // set the Adapter to RecyclerView
 
+        editText.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i_, int i1, int i2) {
+                        ArrayList<Contact> contactList_retrieve = new ArrayList<>();
+
+                        final String searchContent = editText.getText().toString();
+
+                        for (int i = 0; i < contactList.size(); i++) {
+                            if (contactList.get(i).getName().contains(searchContent) ) {
+                                contactList_retrieve.add(contactList.get(i));
+                            } else if (contactList.get(i).getPhoneNumber().contains(searchContent)) {
+                                contactList_retrieve.add(contactList.get(i));
+                            }
+                        }
+                        CustomAdapter customAdapter_retrieve = new CustomAdapter(getActivity(), contactList_retrieve);
+                        recyclerView.setAdapter(customAdapter_retrieve);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                }
+        );
         return view;
     }
 
