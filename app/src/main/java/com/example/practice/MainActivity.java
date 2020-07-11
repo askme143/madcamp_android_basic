@@ -1,7 +1,6 @@
 package com.example.practice;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,10 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.practice.ui.contacts.Fragment1;
-import com.example.practice.ui.free.Fragment3;
+import com.example.practice.ui.health.Fragment3;
 import com.example.practice.ui.gallery.Fragment2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;

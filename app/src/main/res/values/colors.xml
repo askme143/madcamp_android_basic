@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#e8dae7</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="fragment1_row_content">#f2e8f0</color>
+    <color name="progress_start">#009587</color>
+    <color name="progress_end">#CC009587</color>
 </resources>
