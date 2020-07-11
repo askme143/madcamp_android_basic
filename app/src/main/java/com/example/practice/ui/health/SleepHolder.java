@@ -74,7 +74,7 @@ public class SleepHolder extends HealthHolder {
                         int hour = totalSleepTime / 1000 / 60 / 60;
                         int minute = (totalSleepTime / 1000 / 60) % 60;
 
-                        mTextView1.setText(hour+"hour "+minute+"minute");
+                        mTextView1.setText(hour+"h "+minute+"m");
                     }
                 }
             };

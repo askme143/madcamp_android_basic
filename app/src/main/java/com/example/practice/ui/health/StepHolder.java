@@ -25,6 +25,8 @@ public class StepHolder extends HealthHolder {
     private View mView;
 
     private TextView mStepCount;
+    private TextView mStepGoal;
+    private TextView mStepPercent;
     private ProgressBar mStepProgress;
 
     public StepHolder(HealthDataStore store) {
@@ -34,6 +36,8 @@ public class StepHolder extends HealthHolder {
     @RequiresApi(api = Build.VERSION_CODES.O)
     void show(View view) {
         mStepCount = (TextView) view.findViewById(R.id.stepCount);
+        mStepGoal = (TextView) view.findViewById(R.id.stepGoal);
+        mStepPercent = (TextView) view.findViewById(R.id.stepPercent);
         mStepProgress = (ProgressBar) view.findViewById(R.id.stepProgress);
 
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
@@ -62,14 +66,18 @@ public class StepHolder extends HealthHolder {
                 @Override
                 public void onResult(HealthDataResolver.ReadResult healthData) {
                     int count = 0;
+                    long todayStart = getStartTimeOfTodaySeoul();
 
                     try {
                         for (HealthData data : healthData) {
+                            System.out.println("hey?" + ((data.getLong(HealthConstants.StepCount.START_TIME) - todayStart) / 60/60/1000));
+
                             count += data.getInt(HealthConstants.StepCount.COUNT);
                         }
                     } finally {
                         healthData.close();
-                        mStepCount.setText(count+" / 6000");
+                        mStepPercent.setText(count/60 + "%");
+                        mStepCount.setText(count+"");
                         mStepProgress.setProgress(count / 60 == 0 ? 1 : count / 60);
                     }
                 }
@@ -78,6 +86,11 @@ public class StepHolder extends HealthHolder {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private long getStartTimeOfToday() {
         return LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private long getStartTimeOfTodaySeoul() {
+        return LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.of("+09:00")) * 1000;
     }
 
     private static final long ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000L;

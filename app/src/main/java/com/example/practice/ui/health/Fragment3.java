@@ -5,6 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -31,6 +36,7 @@ import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionKey;
 import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
 import com.example.practice.R;
+import com.samsung.android.sdk.shealth.Shealth;
 
 import java.lang.reflect.Array;
 import java.time.Instant;
@@ -46,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class Fragment3 extends Fragment {
+public class Fragment3 extends Fragment implements SensorEventListener {
     public static final String TAB_TAG = "TestHealthApp";
 
     private View mView;
@@ -56,6 +62,10 @@ public class Fragment3 extends Fragment {
     private HealthConnectionErrorResult mConnectionErrorResult;
 
     private ArrayList<HealthHolder> mHealthHolderList;
+    private StepHolder mStepHolder;
+
+    private SensorManager mSensorManager;
+    private Sensor mStepSensor;
 
     public Fragment3 () {
     }
@@ -80,15 +90,37 @@ public class Fragment3 extends Fragment {
         mStore = new HealthDataStore(getActivity(), mConnectionListener);
         mStore.connectService();
 
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        if (mStepSensor == null)
+            Toast.makeText(getActivity(),"No Step Detect Sensor", Toast.LENGTH_SHORT).show();
+
         mHealthHolderList = new ArrayList<>();
-        mHealthHolderList.add(new StepHolder(mStore));
+        mStepHolder = new StepHolder(mStore);
+        mHealthHolderList.add(mStepHolder);
         mHealthHolderList.add(new SleepHolder(mStore));
+//        mHealthHolderList.add(new DailyStepHolder(mStore));
 
         HealthAdapter healthAdapter = new HealthAdapter(mHealthHolderList);
         ListView listView = (ListView) mView.findViewById(R.id.listView);
         listView.setAdapter(healthAdapter);
 
         return mView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(mStepSensor != null)
+            mSensorManager.registerListener(this, mStepSensor, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(mSensorManager!=null)
+            mSensorManager.unregisterListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -110,7 +142,6 @@ public class Fragment3 extends Fragment {
                 if (resultMap.containsValue(Boolean.FALSE)) {
                     permissionManager.requestPermissions(mKeySet, (Activity) getContext()).setResultListener(mPermissionListener);
                 } else {
-                    System.out.println("YAA!!\n");
                     showContent();
                 }
             } catch (Exception e) {
@@ -194,4 +225,15 @@ public class Fragment3 extends Fragment {
                     }
                 }
             };
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        mStepHolder.show(mView);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
 }
