@@ -17,5 +17,5 @@
         app:showAsAction="always"
         android:icon="@drawable/treadmill"
         android:enabled="true"
-        android:title="Free"/>
+        android:title="Health"/>
 </menu>

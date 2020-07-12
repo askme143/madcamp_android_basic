@@ -24,7 +24,8 @@ public class SleepHolder extends HealthHolder {
 
     private HealthDataStore mStore;
 
-    private TextView mTextView1;
+    private TextView mTextHour;
+    private TextView mTextMin;
 
     public SleepHolder(HealthDataStore store) {
         mStore = store;
@@ -32,7 +33,8 @@ public class SleepHolder extends HealthHolder {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     void show(View view) {
-        mTextView1 = (TextView) view.findViewById(R.id.sleepTime);
+        mTextHour = (TextView) view.findViewById(R.id.sleepHour);
+        mTextMin = (TextView) view.findViewById(R.id.sleepMin);
 
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
@@ -74,7 +76,8 @@ public class SleepHolder extends HealthHolder {
                         int hour = totalSleepTime / 1000 / 60 / 60;
                         int minute = (totalSleepTime / 1000 / 60) % 60;
 
-                        mTextView1.setText(hour+"h "+minute+"m");
+                        mTextHour.setText(hour+"");
+                        mTextMin.setText(minute+"");
                     }
                 }
             };

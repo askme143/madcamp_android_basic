@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.practice.R;
 import com.samsung.android.sdk.healthdata.HealthConstants;
@@ -27,6 +29,8 @@ import org.eazegraph.lib.models.BarModel;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class StepHolder extends HealthHolder {
     private static final int type = 0;
@@ -39,6 +43,10 @@ public class StepHolder extends HealthHolder {
     private TextView mStepPercent;
     private ProgressBar mStepProgress;
     private BarChart mStepBarChart;
+    private ConstraintLayout mTimeProgress;
+    private TextView mTime0;
+    private TextView mTime12;
+    private TextView mTime24;
 
     public StepHolder(HealthDataStore store) {
         mStore = store;
@@ -51,6 +59,10 @@ public class StepHolder extends HealthHolder {
         mStepPercent = (TextView) view.findViewById(R.id.stepPercent);
         mStepProgress = (ProgressBar) view.findViewById(R.id.stepProgress);
         mStepBarChart = (BarChart) view.findViewById(R.id.stepBarChart);
+        mTimeProgress = (ConstraintLayout) view.findViewById(R.id.timeProgress);
+        mTime0 = (TextView) view.findViewById(R.id.time0);
+        mTime12 = (TextView) view.findViewById(R.id.time12);
+        mTime24 = (TextView) view.findViewById(R.id.time24);
 
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
@@ -97,13 +109,32 @@ public class StepHolder extends HealthHolder {
                         mStepPercent.setText(totalStep / 60 + "%");
                         mStepCount.setText(totalStep + "");
                         mStepProgress.setProgress(totalStep / 60 == 0 ? 1 : totalStep / 60);
-                        mStepBarChart.clearChart();
 
+                        mStepBarChart.clearChart();
                         for (int i = 0; i < 12; i++) {
                             mStepBarChart.addBar(new BarModel("", (float) stepTime[i], 0xFFF7C744));
                         }
-
                         mStepBarChart.startAnimation();
+
+                        float biasedValue = ((float) (Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"))
+                                .getTimeInMillis() - todayStart) / ONE_DAY_IN_MILLIS);
+                        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mTimeProgress.getLayoutParams();
+                        params.horizontalBias = biasedValue;
+                        mTimeProgress.setLayoutParams(params);
+
+                        if (biasedValue < 0.25) {
+                            mTime0.setVisibility(View.INVISIBLE);
+                            mTime12.setVisibility(View.VISIBLE);
+                            mTime24.setVisibility(View.VISIBLE);
+                        } else if (biasedValue > 0.75) {
+                            mTime0.setVisibility(View.VISIBLE);
+                            mTime12.setVisibility(View.VISIBLE);
+                            mTime24.setVisibility(View.INVISIBLE);
+                        } else {
+                            mTime0.setVisibility(View.VISIBLE);
+                            mTime12.setVisibility(View.INVISIBLE);
+                            mTime24.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             };

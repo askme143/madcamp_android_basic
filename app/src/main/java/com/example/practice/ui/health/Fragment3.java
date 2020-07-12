@@ -1,6 +1,5 @@
 package com.example.practice.ui.health;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -28,29 +26,17 @@ import androidx.fragment.app.Fragment;
 
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
 import com.samsung.android.sdk.healthdata.HealthConstants;
-import com.samsung.android.sdk.healthdata.HealthData;
-import com.samsung.android.sdk.healthdata.HealthDataResolver;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.samsung.android.sdk.healthdata.HealthPermissionManager;
 import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionKey;
 import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
 import com.example.practice.R;
-import com.samsung.android.sdk.shealth.Shealth;
 
-import java.lang.reflect.Array;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 public class Fragment3 extends Fragment implements SensorEventListener {
     public static final String TAB_TAG = "TestHealthApp";
@@ -101,18 +87,12 @@ public class Fragment3 extends Fragment implements SensorEventListener {
         mHealthHolderList.add(mStepHolder);
         mHealthHolderList.add(new SleepHolder(mStore));
 
-        HealthAdapter healthAdapter = new HealthAdapter(mHealthHolderList);
-        ListView listView = (ListView) mView.findViewById(R.id.listView);
-        listView.setAdapter(healthAdapter);
-
         return mView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(mStepSensor != null)
-            mSensorManager.registerListener(this, mStepSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -124,9 +104,12 @@ public class Fragment3 extends Fragment implements SensorEventListener {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showContent() {
-        for (HealthHolder healthHolder : mHealthHolderList) {
-            healthHolder.show(mView);
-        }
+        HealthAdapter healthAdapter = new HealthAdapter(mHealthHolderList);
+        ListView listView = (ListView) mView.findViewById(R.id.listView);
+        listView.setAdapter(healthAdapter);
+
+        if(mStepSensor != null)
+            mSensorManager.registerListener(this, mStepSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     private final HealthDataStore.ConnectionListener mConnectionListener = new HealthDataStore.ConnectionListener() {
