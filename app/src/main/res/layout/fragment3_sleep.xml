@@ -3,7 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="290dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/health_row">
 
@@ -121,12 +121,42 @@
         android:paddingStart="10dp"
         tools:ignore="RtlSymmetry" />
 
+    <TextView
+        android:layout_marginLeft="55dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/sleepBarConstraint"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="D-4"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/sleepBarConstraint"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="D-2"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_marginRight="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/sleepBarConstraint"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/health_blue"
+        android:text="Today"
+        android:layout_marginTop="10dp"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sleepBarConstraint"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:paddingHorizontal="60dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="50dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -164,19 +194,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintVertical_bias="1"
+            app:layout_constraintVertical_bias="0"
+            android:layout_marginTop="0dp"
             />
 
         <View
             android:id="@+id/sleepBar1"
             android:layout_width="10dp"
-            android:layout_height="100dp"
+            android:layout_height="60dp"
             android:background="@drawable/sleep_bar_before"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintVertical_bias="0"
+            android:layout_marginTop="0dp"
             />
 
         <View
@@ -187,32 +219,32 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="0dp"
             />
 
         <View
             android:id="@+id/sleepBar3"
             android:layout_width="10dp"
-            android:layout_height="100dp"
+            android:layout_height="0dp"
             android:background="@drawable/sleep_bar_before"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.75"
+            android:layout_marginTop="0dp"
             />
 
         <View
             android:id="@+id/sleepBar4"
             android:layout_width="10dp"
-            android:layout_height="100dp"
+            android:layout_height="0dp"
             android:background="@drawable/sleep_bar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="1"
+            android:layout_marginTop="0dp"
             />
 
         <View
@@ -234,15 +266,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <ProgressBar-->
-<!--        android:id="@+id/pb"-->
-<!--        style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="10dp"-->
-<!--        android:layout_marginTop="28dp"-->
-<!--        android:progress="80"-->
-<!--        android:progressDrawable="@drawable/sleep_progress"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/sleepHour"-->
-<!--        tools:layout_editor_absoluteX="0dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
