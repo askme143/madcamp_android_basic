@@ -66,7 +66,7 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
         String friend = mFriendArray[position];
 
 //        startTimeMilli = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).getTimeInMillis();
-        friend = "Ryan, Pikachu";
+//        friend = "Ryan, Pikachu";
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(startTimeMilli);
@@ -89,35 +89,6 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
 
     }
 
-    private void openDialog() {
-//        DialogFragment myDialogFragment = new DialogFragment();
-////        myDialogFragment.setTargetFragment(, 0);
-//        FragmentManager fm = ((Activity)mContext).getFragmentManager();
-//        myDialogFragment.show(fm, "new_dialog");
-
-        final EditText edittext = new EditText(mContext);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Exercise Story");
-        builder.setMessage("Please enter the name of your friend.");
-        builder.setView(edittext);
-        builder.setPositiveButton("Enter",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(mContext,edittext.getText().toString() ,Toast.LENGTH_LONG).show();
-                        String result = edittext.getText().toString();
-                        // result
-                    }
-                });
-        builder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        builder.show();
-    }
-
     @Override
     public int getItemCount() {
         return 10;
@@ -133,16 +104,6 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
             friend = itemView.findViewById(R.id.friend);
-            editButton = itemView.findViewById(R.id.editFriend);
-
-            editButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    openDialog();
-                }
-
-            });
-
 
         }
 

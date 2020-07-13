@@ -32,6 +32,19 @@
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp" />
 
+    <ImageButton
+        android:id="@+id/edit_sleep"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/pencil"
+        app:layout_constraintLeft_toRightOf="@id/sleepText"
+        app:layout_constraintTop_toTopOf="@id/sleepText"
+        app:layout_constraintBottom_toBottomOf="@id/sleepText"
+        android:layout_marginLeft="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background=""/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
