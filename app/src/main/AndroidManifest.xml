@@ -20,7 +20,10 @@
         </activity>
         <activity android:name=".ui.gallery.FullImageActivity" />
         <meta-data android:name="com.samsung.android.health.permission.read"
-            android:value="com.samsung.health.step_count;com.samsung.health.sleep" />
+            android:value="com.samsung.health.step_count;com.samsung.health.sleep;
+            com.samsung.health.exercise" />
+        <meta-data android:name="com.samsung.android.health.permission.write"
+            android:value="com.samsung.health.exercise" />
     </application>
 
 </manifest>

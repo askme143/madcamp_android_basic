@@ -72,6 +72,8 @@ public class Fragment3 extends Fragment implements SensorEventListener {
         mKeySet = new HashSet<>();
         mKeySet.add (new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
         mKeySet.add (new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
+        mKeySet.add (new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.READ));
+        mKeySet.add (new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, HealthPermissionManager.PermissionType.WRITE));
 
         mStore = new HealthDataStore(getActivity(), mConnectionListener);
         mStore.connectService();
@@ -86,6 +88,7 @@ public class Fragment3 extends Fragment implements SensorEventListener {
         mStepHolder = new StepHolder(mStore);
         mHealthHolderList.add(mStepHolder);
         mHealthHolderList.add(new SleepHolder(mStore));
+        mHealthHolderList.add(new ExerciseHolder(mStore));
 
         return mView;
     }

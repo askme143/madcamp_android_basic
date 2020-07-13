@@ -31,7 +31,6 @@ public class SleepHolder extends HealthHolder {
 
     private int mSleepTimeGoal;
     private int mStartOffset;
-    private int mEndOffset;
 
     private HealthDataStore mStore;
 
@@ -59,7 +58,6 @@ public class SleepHolder extends HealthHolder {
         mSleepTimeGoal = wakeUpGoal - sleepGoal;
 
         mStartOffset = sleepGoal - mSleepTimeGoal / 2;
-        mEndOffset = wakeUpGoal + mSleepTimeGoal / 2;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -171,7 +169,6 @@ public class SleepHolder extends HealthHolder {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
 
         cal.add(Calendar.HOUR, -16 - 24*4);
-
 
         return cal.getTimeInMillis();
     }

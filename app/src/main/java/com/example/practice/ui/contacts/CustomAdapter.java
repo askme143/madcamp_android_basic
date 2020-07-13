@@ -79,7 +79,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
         changeVisibility(holder.hidden_layer, selectedItems.get(position));
 
-
         // implement setOnClickListener event on item view.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class HealthAdapter extends BaseAdapter {
     private static final int ITEM_VIEW_TYPE_STP = 0;
     private static final int ITEM_VIEW_TYPE_SLP = 1;
-    private static final int ITEM_VIEW_TYPE_MAX = 2;
+    private static final int ITEM_VIEW_TYPE_EXR = 2;
+    private static final int ITEM_VIEW_TYPE_MAX = 3;
 
     private ArrayList<HealthHolder> healthHolderList;
 
@@ -60,6 +61,9 @@ public class HealthAdapter extends BaseAdapter {
                     break;
                 case ITEM_VIEW_TYPE_SLP:
                     view = inflater.inflate(R.layout.fragment3_sleep, viewGroup, false);
+                    break;
+                case ITEM_VIEW_TYPE_EXR:
+                    view = inflater.inflate(R.layout.fragment3_exercise, viewGroup, false);
                     break;
             }
 
