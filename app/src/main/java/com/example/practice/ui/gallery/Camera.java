@@ -27,6 +27,13 @@ import androidx.fragment.app.Fragment;
 import com.example.practice.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Camera extends Activity implements View.OnClickListener {
 
     final String TAG = getClass().getSimpleName();
@@ -91,12 +98,53 @@ public class Camera extends Activity implements View.OnClickListener {
                     Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
+                        /////////// 저장해야돼ㅐ ///////////////
+                        long now = System.currentTimeMillis();
+                        Date mDate = new Date(now);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhh:mm:ss");
+                        String getTime = simpleDateFormat.format(mDate);
+                        saveBitmapToJpeg(bitmap, getTime);
+
                     }
 
                 }
                 break;
         }
     }
+
+    private void saveBitmapToJpeg(Bitmap bitmap, String name) {
+
+        //내부저장소 캐시 경로를 받아옵니다.
+        File storage = getCacheDir();
+
+        //저장할 파일 이름
+        String fileName = name + ".jpg";
+
+        //storage 에 파일 인스턴스를 생성합니다.
+        File tempFile = new File(storage, fileName);
+
+        try {
+
+            // 자동으로 빈 파일을 생성합니다.
+            tempFile.createNewFile();
+
+            // 파일을 쓸 수 있는 스트림을 준비합니다.
+            FileOutputStream out = new FileOutputStream(tempFile);
+
+            // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            // 스트림 사용후 닫아줍니다.
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            Log.e("MyTag","FileNotFoundException : " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("MyTag","IOException : " + e.getMessage());
+        }
+    }
+
+
 
 
 
