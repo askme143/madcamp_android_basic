@@ -3,6 +3,7 @@ package com.example.practice.ui.gallery;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -38,6 +40,8 @@ import static android.app.Activity.RESULT_OK;
 public class Fragment2 extends Fragment {
     private Context mContext;
     private String mCurrentPhotoPath;
+    private String mImageDirPath;
+    private int mCellSize;
     private static final int REQUEST_TAKE_PHOTO = 1;
 
     @Nullable
@@ -46,28 +50,48 @@ public class Fragment2 extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         View view = (View) inflater.inflate(R.layout.fragment2, container, false);
         mContext = view.getContext();
+        mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampApp";
 
-        /* Get GRIDVIEW */
+        /* Get GRID_VIEW */
         GridView gridView = (GridView) view.findViewById(R.id.grid_view);
 
-        /* Get proper CELLSIZE which is (width pixels - space between cells) / 3 */
-        /* Make new image adapter and  */
-        int mCellSize = (getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
+        /* Make an array of image paths */
+        File dir = new File(mImageDirPath);
+        String[] imagePaths = dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String s) {
+                boolean bOK = false;
+                if(s.toLowerCase().endsWith(".jpg")) bOK = true;
+
+                return bOK;
+            }
+        });
+
+        /* Get proper CELL_SIZE which is (width pixels - space between cells) / 3 */
+        mCellSize = (getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
+
+        /* Make an array list of IMAGEs */
+        for (String path : imagePaths) {
+            Image image = new Image (path, getScaledImage(path));
+
+        }
+
+        /* Set new image adapter to GRIDVIEW */
         gridView.setAdapter(new ImageAdapter(getActivity(), mCellSize));
 
+        /* Set click listener. Start FULL_IMAGE_ACTIVITY with POSITION which
+            indicates an clicked image */
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-
-                // Sending image id to FullScreenActivity
                 Intent i = new Intent(getActivity(), FullImageActivity.class);
-                // passing array index
                 i.putExtra("id", position);
                 startActivity(i);
             }
         });
 
+        /* Floating camera button */
         FloatingActionButton fab = view.findViewById(R.id.cameraIcon);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +100,6 @@ public class Fragment2 extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -84,7 +107,7 @@ public class Fragment2 extends Fragment {
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                 .format(new Timestamp(System.currentTimeMillis()));
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampApp");
+        File storageDir = new File(mImageDirPath);
 
         if (!storageDir.exists()) {
             storageDir.mkdirs();
@@ -135,6 +158,25 @@ public class Fragment2 extends Fragment {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         mContext.sendBroadcast(mediaScanIntent);
-        Toast.makeText(mContext, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private Bitmap getScaledImage (String path) {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        /* Get the dimensions of the bitmap */
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        /* Determine how much to scale down the image */
+        int scaleFactor = Math.min(photoW/mCellSize, photoH/mCellSize);
+
+        /* Decode the image file into a Bitmap sized to fill the View */
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        return BitmapFactory.decodeFile(path, bmOptions);
     }
 }
