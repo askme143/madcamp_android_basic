@@ -9,4 +9,5 @@
     <color name="health_blue">#596BCC</color>
     <color name="health_background">#eceaeb</color>
     <color name="health_sleep_gray">#888</color>
+    <color name="health_sleep_lightgray">#cccccc</color>
 </resources>
