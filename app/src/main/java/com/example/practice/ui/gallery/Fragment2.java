@@ -47,14 +47,14 @@ public class Fragment2 extends Fragment {
         View view = (View) inflater.inflate(R.layout.fragment2, container, false);
         mContext = view.getContext();
 
+        /* Get GRIDVIEW */
         GridView gridView = (GridView) view.findViewById(R.id.grid_view);
 
-        int mCellSize = (this.getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
-
-        // Instance of ImageAdapter Class
+        /* Get proper CELLSIZE which is (width pixels - space between cells) / 3 */
+        /* Make new image adapter and  */
+        int mCellSize = (getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
         gridView.setAdapter(new ImageAdapter(getActivity(), mCellSize));
 
-        //// On Click event for Single GridView Item ////
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
@@ -91,7 +91,7 @@ public class Fragment2 extends Fragment {
         }
 
         File image = File.createTempFile(
-                imageFileName, ".jpg", storageDir
+            imageFileName, ".jpg", storageDir
         );
 
         mCurrentPhotoPath = image.getAbsolutePath();
