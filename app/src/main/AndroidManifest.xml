@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.gallery.FullImageActivity" />
+        <activity android:name=".ui.gallery.Camera"/>
         <meta-data android:name="com.samsung.android.health.permission.read"
             android:value="com.samsung.health.step_count;com.samsung.health.sleep" />
 
