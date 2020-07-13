@@ -1,8 +1,10 @@
 package com.example.practice;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -22,29 +24,14 @@ public class MainActivity extends AppCompatActivity {
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
-    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private int mPermissionCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,"권한 승인이 필요합니다", Toast.LENGTH_LONG).show();
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            }
-        } else {
-            startFragment();
-        }
+        checkPermission();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView
@@ -76,19 +63,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
-                    startFragment();
-                } else {
-                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
-                }
-            }
-
+        if (grantResults.length != mPermissionCount) {
+            Toast.makeText(this, "아직 승인받지 않았습니다.", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        startFragment();
     }
 
     private void startFragment() {
@@ -98,5 +85,30 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1)
                 .commitAllowingStateLoss();
+    }
+
+    public void checkPermission() {
+        String tmp = "";
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED)
+            tmp += Manifest.permission.READ_CONTACTS + " ";
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            tmp += Manifest.permission.READ_EXTERNAL_STORAGE + " ";
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            tmp += Manifest.permission.WRITE_EXTERNAL_STORAGE + " ";
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED)
+            tmp += Manifest.permission.CAMERA + " ";
+
+        if (!TextUtils.isEmpty(tmp)) {
+            String[] tmpArray = tmp.trim().split(" ");
+            mPermissionCount = tmpArray.length;
+            ActivityCompat.requestPermissions(this, tmpArray, 1);
+        } else {
+            startFragment();
+        }
     }
 }

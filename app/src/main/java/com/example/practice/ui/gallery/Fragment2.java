@@ -59,19 +59,22 @@ public class Fragment2 extends Fragment {
 
         FloatingActionButton fab = view.findViewById(R.id.cameraIcon);
         Uri uri;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
 //                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                File photoFile = new File();
+//                Uri providerUri = FileProvider.getUriForFile(getContext(), getActivity().getPackageName(), photoFile);
+//                File tempImageFile = new File()
 //                File photoFile = createFile();
 //                Uri providerFileUri = FileProvider.getUriForFile(getActivity(), getPackageName(), photoFile);
 //                i.putExtra(MediaStore.EXTRA_OUTPUT, providerFileUri);
 //                startActivityForResult(i, 1);
-                Intent i = new Intent(getActivity(), Camera.class);
-                i.putExtra("id", 0);
-                startActivity(i);
-            }
-        });
+////                Intent i = new Intent(getActivity(), Camera.class);
+////                i.putExtra("id", 0);
+////                startActivity(i);
+//            }
+//        });
 
 
         return view;
