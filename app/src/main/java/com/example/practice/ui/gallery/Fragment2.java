@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,15 +36,23 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
 public class Fragment2 extends Fragment {
+    private static final int REQUEST_TAKE_PHOTO = 1;
+
     private Context mContext;
+    private GridView mGridView;
+    private int mCellSize;
+
     private String mCurrentPhotoPath;
     private String mImageDirPath;
-    private int mCellSize;
-    private static final int REQUEST_TAKE_PHOTO = 1;
+
+    private String[] mImagePaths;
+    private ImageAdapter mImageAdapter;
+    private ArrayList<Image> mImageArrayList;
 
     @Nullable
     @Override
@@ -53,40 +63,24 @@ public class Fragment2 extends Fragment {
         mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampApp";
 
         /* Get GRID_VIEW */
-        GridView gridView = (GridView) view.findViewById(R.id.grid_view);
+        mGridView = (GridView) view.findViewById(R.id.grid_view);
 
-        /* Make an array of image paths */
-        File dir = new File(mImageDirPath);
-        String[] imagePaths = dir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                boolean bOK = false;
-                if(s.toLowerCase().endsWith(".jpg")) bOK = true;
-
-                return bOK;
-            }
-        });
-
-        /* Get proper CELL_SIZE which is (width pixels - space between cells) / 3 */
-        mCellSize = (getResources().getDisplayMetrics().widthPixels - gridView.getRequestedHorizontalSpacing()) / 3;
-
-        /* Make an array list of IMAGEs */
-        for (String path : imagePaths) {
-            Image image = new Image (path, getScaledImage(path));
-
+        if (mImagePaths == null) {
+            initFragment();
         }
-
-        /* Set new image adapter to GRIDVIEW */
-        gridView.setAdapter(new ImageAdapter(getActivity(), mCellSize));
+        mGridView.setAdapter(mImageAdapter);
 
         /* Set click listener. Start FULL_IMAGE_ACTIVITY with POSITION which
             indicates an clicked image */
-        gridView.setOnItemClickListener(new OnItemClickListener() {
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent i = new Intent(getActivity(), FullImageActivity.class);
                 i.putExtra("id", position);
+                i.putExtra("imagePaths", mImagePaths);
+                i.putExtra("imageDirPath", mImageDirPath);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
         });
@@ -146,6 +140,23 @@ public class Fragment2 extends Fragment {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             try {
                 galleryAddPic();
+                /* Update an array of image paths */
+                File dir = new File(mImageDirPath);
+                mImagePaths = dir.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File file, String s) {
+                        boolean bOK = false;
+                        if(s.toLowerCase().endsWith(".jpg")) bOK = true;
+
+                        return bOK;
+                    }
+                });
+
+                /* Insert new image */
+                mImageArrayList.add(new Image(mCurrentPhotoPath, mCellSize));
+
+                /* Update View */
+                mImageAdapter.notifyDataSetChanged();
             } catch (Exception e) {
                 Log.e("Request Take Photo", e.toString());
             }
@@ -161,22 +172,31 @@ public class Fragment2 extends Fragment {
         Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
     }
 
-    private Bitmap getScaledImage (String path) {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
+    private void initFragment() {
+        /* Make an array of image paths */
+        File dir = new File(mImageDirPath);
+        mImagePaths = dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String s) {
+                boolean bOK = false;
+                if(s.toLowerCase().endsWith(".jpg")) bOK = true;
 
-        /* Get the dimensions of the bitmap */
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+                return bOK;
+            }
+        });
 
-        /* Determine how much to scale down the image */
-        int scaleFactor = Math.min(photoW/mCellSize, photoH/mCellSize);
+        /* Get proper CELL_SIZE which is (width pixels - space between cells) / 3 */
+        mCellSize = (getResources().getDisplayMetrics().widthPixels - mGridView.getRequestedHorizontalSpacing()) / 3;
 
-        /* Decode the image file into a Bitmap sized to fill the View */
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
+        /* Make an array list of IMAGEs */
+        mImageArrayList = new ArrayList<>();
+        if (mImagePaths != null) {
+            for (String path : mImagePaths) {
+                mImageArrayList.add(new Image(mImageDirPath + "/" + path, mCellSize));
+            }
+        }
 
-        return BitmapFactory.decodeFile(path, bmOptions);
+        /* Set new image adapter to GRIDVIEW */
+        mImageAdapter = new ImageAdapter(getActivity(), mCellSize, mImageArrayList);
     }
 }

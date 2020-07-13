@@ -32,6 +32,7 @@ import java.util.LinkedHashSet;
 
 public class Fragment1 extends Fragment {
     private ArrayList<Contact> contactList;
+    private CustomAdapter mAdapter;
 
     public Fragment1 () {
     }
@@ -43,18 +44,16 @@ public class Fragment1 extends Fragment {
 
         final EditText editText = (EditText) view.findViewById(R.id.search_bar);
 
-        final String searchContent = editText.getText().toString();
-
         // Total Contacts recycler view area
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        contactList = getContactList();
-
-        //  call the constructor of CustomAdapter to send the reference and data to Adapter
-        CustomAdapter customAdapter = new CustomAdapter(getActivity(), contactList);
-        recyclerView.setAdapter(customAdapter); // set the Adapter to RecyclerView
+        if (mAdapter == null) {
+            contactList = getContactList();
+            mAdapter = new CustomAdapter(getActivity(), contactList);
+        }
+        recyclerView.setAdapter(mAdapter); // set the Adapter to RecyclerView
 
         editText.addTextChangedListener(
                 new TextWatcher() {

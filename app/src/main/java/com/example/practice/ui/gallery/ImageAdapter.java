@@ -10,51 +10,42 @@ import android.widget.ImageView;
 
 import com.example.practice.R;
 
+import java.util.ArrayList;
+
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int mCellSize;
+    private ArrayList<Image> mImageArrayList;
 
-    // Keep all Images in array
-    public Integer[] mThumbIds = {
-            R.drawable.pic_1, R.drawable.pic_2,
-            R.drawable.pic_3, R.drawable.pic_4,
-            R.drawable.pic_5, R.drawable.pic_6,
-            R.drawable.pic_7, R.drawable.pic_8,
-            R.drawable.pic_9, R.drawable.pic_10,
-            R.drawable.pic_11, R.drawable.pic_12,
-            R.drawable.pic_13, R.drawable.pic_14,
-            R.drawable.pic_15
-    };
-
-    // Constructor
-    public ImageAdapter(Context c, int cellSize){
+    public ImageAdapter(Context c, int cellSize, ArrayList<Image> imageArrayList){
         mContext = c;
         mCellSize = cellSize;
+        mImageArrayList = imageArrayList;
     }
 
     @Override
     public int getCount() {
-        return mThumbIds.length;
+        return mImageArrayList.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return mThumbIds[position];
+    public Object getItem(int i) {
+        return mImageArrayList.get(i).getScaledImage();
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
+    public long getItemId(int i) {
+        return i;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(mThumbIds[position]);
+        imageView.setImageBitmap(mImageArrayList.get(i).getScaledImage());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setLayoutParams(new GridView.LayoutParams(mCellSize, mCellSize));
+        imageView.setRotation(90);
         return imageView;
     }
-
 }
