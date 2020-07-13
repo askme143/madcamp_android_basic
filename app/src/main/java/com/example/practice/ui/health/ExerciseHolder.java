@@ -75,7 +75,7 @@ public class ExerciseHolder extends HealthHolder {
 
                         mRecyclerView.setLayoutManager(mLayoutManager);
 
-                        HealthExerciseAdapter healthExerciseAdapter = new HealthExerciseAdapter(mContext, startTimeMilliArray, friendArray);
+                        HealthExerciseAdapter healthExerciseAdapter = new HealthExerciseAdapter(startTimeMilliArray);
                         mRecyclerView.setAdapter(healthExerciseAdapter);
                     }
                 }

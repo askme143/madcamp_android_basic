@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="30dp"
+    android:layout_marginHorizontal="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -44,41 +44,5 @@
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/centerDot"
         app:layout_constraintStart_toStartOf="@id/centerDot"
-        app:layout_constraintEnd_toEndOf="@id/centerDot">
-
-        <TextView
-            android:id="@+id/friend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pikachu, Ryan"
-            app:layout_constraintTop_toBottomOf="@id/centerDot"
-            app:layout_constraintStart_toStartOf="@id/centerDot"
-            app:layout_constraintEnd_toEndOf="@id/centerDot"
-            />
-
-        <ImageButton
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/editFriend"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:background="#FFF"
-            android:padding="3dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/pencil" />
-
-
-    </LinearLayout>
-<!--    <TextView-->
-<!--        android:id="@+id/friend"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Pikachu, Ryan"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/centerDot"-->
-<!--        app:layout_constraintStart_toStartOf="@id/centerDot"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/centerDot"-->
-<!--        />-->
-
+        app:layout_constraintEnd_toEndOf="@id/centerDot"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
