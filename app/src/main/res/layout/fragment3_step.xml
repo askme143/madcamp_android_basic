@@ -48,8 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@id/walkText"
         android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:background=""/>
+        android:scaleType="fitCenter"/>
 
 
     <TextView

@@ -42,8 +42,7 @@
         app:layout_constraintBottom_toBottomOf="@id/sleepText"
         android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:background=""/>
+        android:scaleType="fitCenter"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"

@@ -4,21 +4,31 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class Image implements Serializable {
+public class Image {
     private String mAbsolutePath;
-    private int mCellSize;
+    private int mHieght;
+    private int mWidth;
     private Bitmap mScaledImage;
     private Bitmap mOriginalImage = null;
 
     public Image(String path, int cellSize) {
         mAbsolutePath = path;
-        mCellSize = cellSize;
+        mHieght = cellSize;
+        mWidth = cellSize;
+    }
+
+    public Image(String path, int height, int width) {
+        mAbsolutePath = path;
+        mHieght = height;
+        mWidth = width;
     }
 
     public Bitmap getOriginalImage() {
@@ -45,12 +55,12 @@ public class Image implements Serializable {
                 /* Get the SCALE_FACTOR that is a power of 2 and
                     keeps both height and width larger than CELL_SIZE. */
                 int scaleFactor = 1;
-                if (imageHeight > mCellSize || imageWidth > mCellSize) {
+                if (imageHeight > mHieght || imageWidth > mWidth) {
                     final int halfHeight = imageHeight / 2;
                     final int halfWidth = imageWidth / 2;
 
-                    while ((halfHeight / scaleFactor) >= mCellSize
-                            && (halfWidth / scaleFactor) >= mCellSize) {
+                    while ((halfHeight / scaleFactor) >= mHieght
+                            && (halfWidth / scaleFactor) >= mWidth) {
                         scaleFactor *= 2;
                     }
                 }
@@ -60,11 +70,14 @@ public class Image implements Serializable {
                 bmOptions.inSampleSize = scaleFactor;
 
                 mScaledImage = rotateImage(BitmapFactory.decodeFile(mAbsolutePath, bmOptions));
-//                mScaledImage = BitmapFactory.decodeFile(mAbsolutePath, bmOptions);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         return mScaledImage;
+    }
+
+    public String getAbsolutePath() {
+        return mAbsolutePath;
     }
 
     private Bitmap rotateImage (Bitmap bitmap) throws IOException {

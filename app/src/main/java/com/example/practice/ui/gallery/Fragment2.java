@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.content.Intent;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -41,10 +43,12 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_OK;
 
 public class Fragment2 extends Fragment {
+    private Fragment2 mFragment = this;
     private static final int REQUEST_TAKE_PHOTO = 1;
 
     private Context mContext;
     private GridView mGridView;
+    FloatingActionButton mFloatButton;
     private int mCellSize;
 
     private String mCurrentPhotoPath;
@@ -53,6 +57,8 @@ public class Fragment2 extends Fragment {
     private String[] mImagePaths;
     private ImageAdapter mImageAdapter;
     private ArrayList<Image> mImageArrayList;
+
+    private int click_enable;
 
     @Nullable
     @Override
@@ -70,29 +76,78 @@ public class Fragment2 extends Fragment {
         }
         mGridView.setAdapter(mImageAdapter);
 
+        /* Floating camera button */
+        mFloatButton = view.findViewById(R.id.cameraIcon);
+        mFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
         /* Set click listener. Start FULL_IMAGE_ACTIVITY with POSITION which
             indicates an clicked image */
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent i = new Intent(getActivity(), FullImageActivity.class);
-                i.putExtra("id", position);
-                i.putExtra("imagePaths", mImagePaths);
-                i.putExtra("imageDirPath", mImageDirPath);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                if (click_enable == 1) {
+                    Intent i = new Intent(getActivity(), FullImageActivity.class);
+                    i.putExtra("id", position);
+                    i.putExtra("imagePaths", mImagePaths);
+                    i.putExtra("imageDirPath", mImageDirPath);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
             }
         });
 
-        /* Floating camera button */
-        FloatingActionButton fab = view.findViewById(R.id.cameraIcon);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                click_enable = 0;
+                final ImageDeleteAdapter deleteAdapter = new ImageDeleteAdapter(mContext, mCellSize, mImageArrayList);
+                mGridView.setAdapter(deleteAdapter);
+
+                final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                        @Override
+                        public void handleOnBackPressed() {
+                            System.out.println("key-back?");
+                            mGridView.setAdapter(mImageAdapter);
+
+                            mFloatButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dispatchTakePictureIntent();
+                                }
+                            });
+
+                            this.remove();
+                        }
+                };
+                requireActivity().getOnBackPressedDispatcher().addCallback(mFragment, callback);
+
+                mFloatButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteAdapter.deleteChecked();
+                        System.out.println("deleted?");
+
+                        mGridView.setAdapter(mImageAdapter);
+                        mFloatButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dispatchTakePictureIntent();
+                            }
+                        });
+
+                        callback.remove();
+                    }
+                });
+                return false;
             }
-        });
+        }
+        );
 
         return view;
     }
@@ -198,5 +253,7 @@ public class Fragment2 extends Fragment {
 
         /* Set new image adapter to GRIDVIEW */
         mImageAdapter = new ImageAdapter(getActivity(), mCellSize, mImageArrayList);
+
+        click_enable = 1;
     }
 }

@@ -40,7 +40,7 @@ public class PageImageAdapter extends PagerAdapter {
         int padding = (int) mContext.getResources().getDimension(R.dimen.activity_vertical_margin);
         imageView.setPadding(padding, padding, padding, padding);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imageView.setImageBitmap (mImageArrayList.get(position).getOriginalImage());
+        imageView.setImageBitmap (mImageArrayList.get(position).getScaledImage());
         ((ViewPager) container).addView(imageView, 0);
         return imageView;
     }

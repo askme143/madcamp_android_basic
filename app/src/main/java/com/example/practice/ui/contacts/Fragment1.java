@@ -48,7 +48,6 @@ public class Fragment1 extends Fragment {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-
         if (mAdapter == null) {
             contactList = getContactList();
             mAdapter = new CustomAdapter(getActivity(), contactList);

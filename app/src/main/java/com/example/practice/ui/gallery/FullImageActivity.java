@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class FullImageActivity extends Activity {
     ArrayList<Image> mImageArrayList;
+    int mHeight, mWidth;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +27,14 @@ public class FullImageActivity extends Activity {
         String imageDirPath = i.getStringExtra("imageDirPath");
         String[] imagePaths = i.getStringArrayExtra("imagePaths");
 
+        mHeight = getResources().getDisplayMetrics().heightPixels;
+        mWidth = getResources().getDisplayMetrics().widthPixels;
+
         /* Make an array list of IMAGEs */
         mImageArrayList = new ArrayList<>();
         if (imagePaths != null) {
             for (String path : imagePaths) {
-                mImageArrayList.add(new Image(imageDirPath + "/" + path, 0));
+                mImageArrayList.add(new Image(imageDirPath + "/" + path, mHeight, mWidth));
             }
         }
 
