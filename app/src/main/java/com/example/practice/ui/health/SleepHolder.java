@@ -2,13 +2,21 @@ package com.example.practice.ui.health;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,9 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SleepHolder extends HealthHolder {
     private static final int type = 1;
     private Context mContext;
+    private View mView;
 
     private int mSleepTimeGoal;
     private int mStartOffset;
@@ -38,6 +49,20 @@ public class SleepHolder extends HealthHolder {
     private TextView mTextHour;
     private TextView mTextMin;
     private ArrayList<View> mSleepTimeBarList;
+    private ImageButton mEditSleepGoal;
+    private TextView mSleepStartGoal;
+    private TextView mSleepFinishGoal;
+
+    private int[] mStartTimes = new int[5];
+    private int[] mEndTimes = new int[5];
+    private int[] mSleepTimes = new int[5];
+
+    int startHour = 23;
+    int startMin = 0;
+    int endHour = 7;
+    int endMin = 0;
+
+    public final String PREFERENCE2 = "com.example.practice.samplesharedpreferece2";
 
     float dp;
 
@@ -45,35 +70,28 @@ public class SleepHolder extends HealthHolder {
         mStore = store;
         mContext = context;
 
-        int startHour = 23;
-        int startMin = 0;
-        int endHour = 7;
-        int endMin = 0;
-
-
-        int sleepGoal = (startHour * 60 + startMin) * (60 * 1000);
-        int wakeUpGoal = (endHour * 60 + endMin) * (60 * 1000);
-
-        if (sleepGoal > wakeUpGoal)
-            sleepGoal -= ONE_DAY_IN_MILLIS;
-
-        mSleepTimeGoal = wakeUpGoal - sleepGoal;
-
-        mStartOffset = sleepGoal - mSleepTimeGoal / 2;
+        setGoal();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     void show(View view) {
+        mView = view;
         dp = view.getContext().getResources().getDisplayMetrics().density;
         mTextHour = (TextView) view.findViewById(R.id.sleepHour);
         mTextMin = (TextView) view.findViewById(R.id.sleepMin);
         mSleepTimeBarList = new ArrayList<>();
+        mEditSleepGoal = (ImageButton) view.findViewById(R.id.edit_sleep);
+        mSleepStartGoal = (TextView) view.findViewById(R.id.sleepStartGoal);
+        mSleepFinishGoal = (TextView) view.findViewById(R.id.sleepFinishGoal);
 
         mSleepTimeBarList.add(view.findViewById(R.id.sleepBar0));
         mSleepTimeBarList.add(view.findViewById(R.id.sleepBar1));
         mSleepTimeBarList.add(view.findViewById(R.id.sleepBar2));
         mSleepTimeBarList.add(view.findViewById(R.id.sleepBar3));
         mSleepTimeBarList.add(view.findViewById(R.id.sleepBar4));
+
+        mSleepStartGoal.setText(getPREFERENCE2("sleep_startGoal"));
+        mSleepFinishGoal.setText(getPREFERENCE2("sleep_endGoal"));
 
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
@@ -89,6 +107,53 @@ public class SleepHolder extends HealthHolder {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        mEditSleepGoal.setOnClickListener(new ImageButton.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        String sleep_endHour = Integer.toString(timePicker.getHour());
+                        String sleep_endMin = Integer.toString(timePicker.getMinute());
+
+                        setPREFERENCE2("sleep_endHour", sleep_endHour);
+                        setPREFERENCE2("sleep_endMin", sleep_endMin);
+                        setPREFERENCE2("sleep_endGoal", sleep_endHour+" : "+sleep_endMin);
+                        mSleepFinishGoal.setText(getPREFERENCE2("sleep_endGoal"));
+
+                        setGoal();
+                        drawSleepTimeBar();
+                    }
+                }, 0, 0, true);
+                timePickerDialog.show();
+                TimePickerDialog timePickerDialog1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                        String sleep_startHour = Integer.toString(timePicker.getHour());
+                        String sleep_startMin = Integer.toString(timePicker.getMinute());
+
+                        setPREFERENCE2("sleep_startHour", sleep_startHour);
+                        setPREFERENCE2("sleep_startMin", sleep_startMin);
+                        setPREFERENCE2("sleep_startGoal", sleep_startHour+" : "+sleep_startMin);
+                        mSleepStartGoal.setText(getPREFERENCE2("sleep_startGoal"));
+                    }
+                }, 0, 0, true);
+                timePickerDialog1.show();
+            }
+        });
+    }
+
+    public void setPREFERENCE2(String key, String value){
+        SharedPreferences pref = mContext.getSharedPreferences(PREFERENCE2, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String getPREFERENCE2(String key){
+        SharedPreferences pref = mContext.getSharedPreferences(PREFERENCE2, MODE_PRIVATE);
+        return pref.getString(key, "");
     }
 
     int getType() { return type; }
@@ -99,9 +164,9 @@ public class SleepHolder extends HealthHolder {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onResult(HealthDataResolver.ReadResult healthData) {
-                    int[] startTimes = new int[5];
-                    int[] endTimes = new int[5];
-                    int[] sleepTimes = new int[5];
+                    mStartTimes = new int[5];
+                    mEndTimes = new int[5];
+                    mSleepTimes = new int[5];
                     int count = 4;
 
                     try {
@@ -122,9 +187,9 @@ public class SleepHolder extends HealthHolder {
                             int startTime = Math.max((int) (startMilli - dayStart - mStartOffset), 0);
                             int endTime = Math.min ((int) (endMilli - dayStart - mStartOffset), mSleepTimeGoal * 2);
 
-                            startTimes[count] = startTime;
-                            endTimes[count] = endTime;
-                            sleepTimes[count] = (int) (endMilli - startMilli);
+                            mStartTimes[count] = startTime;
+                            mEndTimes[count] = endTime;
+                            mSleepTimes[count] = (int) (endMilli - startMilli);
 
                             dayStart -= ONE_DAY_IN_MILLIS;
                             if (--count < 0)
@@ -132,35 +197,68 @@ public class SleepHolder extends HealthHolder {
                         }
                     } finally {
                         healthData.close();
-                        for (int i = 0; i < 5; i++) {
-                            int sleepTimeInPeriod = endTimes[i] - startTimes[i];
-
-                            System.out.println(sleepTimeInPeriod + " " + startTimes[i] + " " + endTimes[i] + " " + mSleepTimeGoal);
-
-                            View sleepTimeBar = mSleepTimeBarList.get(i);
-
-                            ViewGroup.LayoutParams params = sleepTimeBar.getLayoutParams();
-                            params.height = (int) (sleepTimeInPeriod * dp / (mSleepTimeGoal * 2 / 120)) + 1;
-                            sleepTimeBar.setLayoutParams(params);
-
-                            System.out.println((int) (sleepTimeInPeriod * dp / (mSleepTimeGoal * 2 / 120)) + 1);
-                            System.out.println((int) (startTimes[i] * dp / (mSleepTimeGoal * 2 / 120)));
-
-                            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams)
-                                    sleepTimeBar.getLayoutParams();
-                            marginParams.setMargins(0, (int) (startTimes[i] * dp / (mSleepTimeGoal * 2 / 120)), 0, 0);
-                            sleepTimeBar.requestLayout();
-                        }
-
-                        int sleepTime = sleepTimes[4];
-                        int hour =  sleepTime / 1000 / 60 / 60;
-                        int minute = (sleepTime / 1000 / 60) % 60;
-
-                        mTextHour.setText(hour+"");
-                        mTextMin.setText(minute+"");
+                        drawSleepTimeBar();
                     }
                 }
             };
+
+    /* STRT_##: Time to sleep, END_##: Time to wake up */
+    private void setGoal() {
+        /* Check if there are saved data. Otherwise, use default values */
+        String sh = getPREFERENCE2("sleep_startHour");
+        String sm = getPREFERENCE2("sleep_startMin");
+        String eh = getPREFERENCE2("sleep_endHour");
+        String em = getPREFERENCE2("sleep_endMin");
+
+        if (sh != null && sh.length() > 0 && sm != null && sm.length() > 0
+                && eh != null && eh.length() > 0 && em != null && em.length() > 0 ){
+            startHour = Integer.parseInt(sh);
+            startMin = Integer.parseInt(sm);
+            endHour = Integer.parseInt(eh);
+            endMin = Integer.parseInt(em);
+
+            setPREFERENCE2("sleep_startGoal", sh+" : "+sm);
+            setPREFERENCE2("sleep_endGoal", eh+" : "+em);
+        } else {
+            setPREFERENCE2("sleep_startGoal", 23+" : "+00);
+            setPREFERENCE2("sleep_endGoal", 7+" : "+00);
+        }
+
+        /* Set offsets used to draw bat chart */
+        int sleepGoal = (startHour * 60 + startMin) * (60 * 1000);
+        int wakeUpGoal = (endHour * 60 + endMin) * (60 * 1000);
+
+        if (sleepGoal > wakeUpGoal)
+            sleepGoal -= ONE_DAY_IN_MILLIS;
+
+        mSleepTimeGoal = wakeUpGoal - sleepGoal;
+        mStartOffset = sleepGoal - mSleepTimeGoal / 2;
+    }
+
+    /* Draw bar chart. This function is dependent on mRdResult. */
+    private void drawSleepTimeBar() {
+        for (int i = 0; i < 5; i++) {
+            int sleepTimeInPeriod = mEndTimes[i] - mStartTimes[i];
+
+            View sleepTimeBar = mSleepTimeBarList.get(i);
+
+            ViewGroup.LayoutParams params = sleepTimeBar.getLayoutParams();
+            params.height = (int) (sleepTimeInPeriod * dp / (mSleepTimeGoal * 2 / 120)) + 1;
+            sleepTimeBar.setLayoutParams(params);
+
+            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams)
+                    sleepTimeBar.getLayoutParams();
+            marginParams.setMargins(0, (int) (mStartTimes[i] * dp / (mSleepTimeGoal * 2 / 120)), 0, 0);
+            sleepTimeBar.requestLayout();
+        }
+
+        int sleepTime = mSleepTimes[4];
+        int hour =  sleepTime / 1000 / 60 / 60;
+        int minute = (sleepTime / 1000 / 60) % 60;
+
+        mTextHour.setText(hour+"");
+        mTextMin.setText(minute+"");
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private long getStartTimeSeoul() {
