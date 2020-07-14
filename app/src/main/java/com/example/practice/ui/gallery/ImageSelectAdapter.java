@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 
-public class ImageDeleteAdapter extends BaseAdapter {
+public class ImageSelectAdapter extends BaseAdapter {
     private Context mContext;
     private int mCellSize;
     private ArrayList<Image> mImageArrayList;
@@ -36,7 +36,7 @@ public class ImageDeleteAdapter extends BaseAdapter {
     Bitmap check;
     SparseBooleanArray checked = new SparseBooleanArray();
 
-    public ImageDeleteAdapter(Context c, int cellSize, ArrayList<Image> imageArrayList){
+    public ImageSelectAdapter(Context c, int cellSize, ArrayList<Image> imageArrayList, boolean multiChoose){
         mContext = c;
         mCellSize = cellSize;
         mImageArrayList = imageArrayList;
@@ -77,24 +77,39 @@ public class ImageDeleteAdapter extends BaseAdapter {
 
         checkView.setLayoutParams(new ConstraintLayout.LayoutParams(mCellSize/8, mCellSize/8));
         unCheckView.setLayoutParams(new ConstraintLayout.LayoutParams(mCellSize/8, mCellSize/8));
-        checkView.setVisibility(View.INVISIBLE);
+
+        changeVisibility(i, checkView, unCheckView, false);
 
         imageView.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checked.get(i)) {
-                    checked.delete(i);
-                    unCheckView.setVisibility(View.VISIBLE);
-                    checkView.setVisibility(View.INVISIBLE);
-                } else {
-                    checked.put(i, true);
-                    unCheckView.setVisibility(View.INVISIBLE);
-                    checkView.setVisibility(View.VISIBLE);
-                }
+                changeVisibility(i, checkView, unCheckView, true);
             }
         });
 
         return newView;
+    }
+
+    private void changeVisibility(int i, View checkView, View unCheckView, boolean clicked) {
+        if (clicked){
+            if (checked.get(i)) {
+                checked.delete(i);
+                unCheckView.setVisibility(View.VISIBLE);
+                checkView.setVisibility(View.INVISIBLE);
+            } else {
+                checked.put(i, true);
+                unCheckView.setVisibility(View.INVISIBLE);
+                checkView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (checked.get(i)) {
+                unCheckView.setVisibility(View.INVISIBLE);
+                checkView.setVisibility(View.VISIBLE);
+            } else {
+                unCheckView.setVisibility(View.VISIBLE);
+                checkView.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     public void deleteChecked() {
@@ -113,5 +128,9 @@ public class ImageDeleteAdapter extends BaseAdapter {
             }
         }
         mImageArrayList.removeAll(removeList);
+    }
+
+    public void getChecked() {
+
     }
 }

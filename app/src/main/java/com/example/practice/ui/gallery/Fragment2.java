@@ -78,76 +78,8 @@ public class Fragment2 extends Fragment {
 
         /* Floating camera button */
         mFloatButton = view.findViewById(R.id.cameraIcon);
-        mFloatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
 
-        /* Set click listener. Start FULL_IMAGE_ACTIVITY with POSITION which
-            indicates an clicked image */
-        mGridView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                if (click_enable == 1) {
-                    Intent i = new Intent(getActivity(), FullImageActivity.class);
-                    i.putExtra("id", position);
-                    i.putExtra("imagePaths", mImagePaths);
-                    i.putExtra("imageDirPath", mImageDirPath);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                }
-            }
-        });
-
-        mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                click_enable = 0;
-                final ImageDeleteAdapter deleteAdapter = new ImageDeleteAdapter(mContext, mCellSize, mImageArrayList);
-                mGridView.setAdapter(deleteAdapter);
-
-                final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                        @Override
-                        public void handleOnBackPressed() {
-                            System.out.println("key-back?");
-                            mGridView.setAdapter(mImageAdapter);
-
-                            mFloatButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dispatchTakePictureIntent();
-                                }
-                            });
-
-                            this.remove();
-                        }
-                };
-                requireActivity().getOnBackPressedDispatcher().addCallback(mFragment, callback);
-
-                mFloatButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        deleteAdapter.deleteChecked();
-                        System.out.println("deleted?");
-
-                        mGridView.setAdapter(mImageAdapter);
-                        mFloatButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dispatchTakePictureIntent();
-                            }
-                        });
-
-                        callback.remove();
-                    }
-                });
-                return false;
-            }
-        }
-        );
+        setListener();
 
         return view;
     }
@@ -255,5 +187,79 @@ public class Fragment2 extends Fragment {
         mImageAdapter = new ImageAdapter(getActivity(), mCellSize, mImageArrayList);
 
         click_enable = 1;
+    }
+
+    private void setListener() {
+        mFloatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        /* Set click listener. Start FULL_IMAGE_ACTIVITY with POSITION which
+            indicates an clicked image */
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                if (click_enable == 1) {
+                    Intent i = new Intent(getActivity(), FullImageActivity.class);
+                    i.putExtra("id", position);
+                    i.putExtra("imagePaths", mImagePaths);
+                    i.putExtra("imageDirPath", mImageDirPath);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
+            }
+        });
+
+        mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+             @SuppressLint("FragmentBackPressedCallback")
+             @Override
+             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                 click_enable = 0;
+                 final ImageSelectAdapter deleteAdapter = new ImageSelectAdapter(mContext, mCellSize, mImageArrayList, true);
+                 mGridView.setAdapter(deleteAdapter);
+
+                 final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                     @Override
+                     public void handleOnBackPressed() {
+                         mGridView.setAdapter(mImageAdapter);
+
+                         click_enable = 1;
+                         mFloatButton.setOnClickListener(new View.OnClickListener() {
+                             @Override
+                             public void onClick(View view) {
+                                 dispatchTakePictureIntent();
+                             }
+                         });
+
+                         this.remove();
+                     }
+                 };
+                 requireActivity().getOnBackPressedDispatcher().addCallback(mFragment, callback);
+
+                 mFloatButton.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         deleteAdapter.deleteChecked();
+                         mGridView.setAdapter(mImageAdapter);
+
+                         click_enable = 1;
+                         mFloatButton.setOnClickListener(new View.OnClickListener() {
+                             @Override
+                             public void onClick(View view) {
+                                 dispatchTakePictureIntent();
+                             }
+                         });
+
+                         callback.remove();
+                     }
+                 });
+                 return false;
+             }
+         }
+        );
     }
 }
