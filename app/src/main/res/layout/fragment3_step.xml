@@ -39,7 +39,7 @@
         app:layout_constraintVertical_bias="0.7" />
 
     <ImageButton
-        android:id="@+id/edit_step"
+        android:id="@+id/edit_stepGoal"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/pencil"
@@ -48,7 +48,8 @@
         app:layout_constraintBottom_toBottomOf="@id/walkText"
         android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        android:background="#FFF"/>
 
 
     <TextView

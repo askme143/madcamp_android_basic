@@ -72,7 +72,7 @@
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="10dp"
                     android:adjustViewBounds="true"
                     android:background="@color/colorPrimaryDark"
                     android:contentDescription="Call"

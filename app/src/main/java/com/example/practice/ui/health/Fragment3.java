@@ -85,10 +85,10 @@ public class Fragment3 extends Fragment implements SensorEventListener {
             Toast.makeText(getActivity(),"No Step Detect Sensor", Toast.LENGTH_SHORT).show();
 
         mHealthHolderList = new ArrayList<>();
-        mStepHolder = new StepHolder(mStore);
+        mStepHolder = new StepHolder(mStore, getActivity());
         mHealthHolderList.add(mStepHolder);
-        mHealthHolderList.add(new SleepHolder(mStore));
-        mHealthHolderList.add(new ExerciseHolder(mStore));
+        mHealthHolderList.add(new SleepHolder(mStore, getActivity()));
+        mHealthHolderList.add(new ExerciseHolder(mStore, getActivity()));
 
         return mView;
     }
