@@ -4,25 +4,36 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 public class Image {
     private String mAbsolutePath;
     private int mHieght;
     private int mWidth;
+
+    private String mImageDirPath;
+    private String mImageName;
+
     private Bitmap mScaledImage;
     private Bitmap mOriginalImage = null;
+    private Bitmap mExerciseImage = null;
 
     public Image(String path, int cellSize) {
         mAbsolutePath = path;
         mHieght = cellSize;
         mWidth = cellSize;
+
+        mImageDirPath = getImageDirPath();
+        mImageName = getImageName();
     }
 
     public Image(String path, int height, int width) {
@@ -76,6 +87,25 @@ public class Image {
         return mScaledImage;
     }
 
+    public void saveExerciseImage (String startTimeId) {
+        File dir = new File(mImageDirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+
+        try {
+            File image = new File(mImageDirPath + "/Exercise/" + startTimeId + mImageName);
+            if (!image.exists()) {
+                image.createNewFile();
+            }
+            OutputStream out = new FileOutputStream(image);
+
+            getScaledImage().compress(Bitmap.CompressFormat.JPEG, 100, out);
+            mExerciseImage = mScaledImage;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getAbsolutePath() {
         return mAbsolutePath;
     }
@@ -101,5 +131,13 @@ public class Image {
         }
 
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    private String getImageDirPath() {
+        return mAbsolutePath.substring(0, mAbsolutePath.lastIndexOf('/'));
+    }
+
+    private String getImageName() {
+        return mAbsolutePath.substring(mAbsolutePath.lastIndexOf('/') + 1);
     }
 }

@@ -27,15 +27,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.example.practice.MainActivity;
 import com.example.practice.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +63,7 @@ public class Fragment2 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
         View view = (View) inflater.inflate(R.layout.fragment2, container, false);
+
         mContext = view.getContext();
         mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampApp";
 
@@ -78,6 +77,35 @@ public class Fragment2 extends Fragment {
 
         /* Floating camera button */
         mFloatButton = view.findViewById(R.id.cameraIcon);
+        mFloatButton.setVisibility(View.VISIBLE);
+
+        if (((MainActivity) getActivity()).isSelection()) {
+            mFloatButton.setVisibility(View.GONE);
+            mGridView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    mGridView.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View v,
+                                                int position, long id) {
+                            if (click_enable == 1) {
+                                Intent i = new Intent(getActivity(), FullImageActivity.class);
+                                i.putExtra("id", position);
+                                i.putExtra("imagePaths", mImagePaths);
+                                i.putExtra("imageDirPath", mImageDirPath);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                            }
+                        }
+                    });
+
+                    ((MainActivity) mContext).finishSelectImage(mImageArrayList.get(position));
+                }
+            });
+
+            return view;
+        }
 
         setListener();
 
@@ -219,7 +247,7 @@ public class Fragment2 extends Fragment {
              @Override
              public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                  click_enable = 0;
-                 final ImageSelectAdapter deleteAdapter = new ImageSelectAdapter(mContext, mCellSize, mImageArrayList, true);
+                 final ImageSelectAdapter deleteAdapter = new ImageSelectAdapter(mContext, mCellSize, mImageArrayList);
                  mGridView.setAdapter(deleteAdapter);
 
                  final OnBackPressedCallback callback = new OnBackPressedCallback(true) {

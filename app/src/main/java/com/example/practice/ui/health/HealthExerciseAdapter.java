@@ -33,7 +33,7 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
     public HealthExerciseAdapter(Context context, ExerciseData[] excerciseDataArray) {
         mExcerciseDataArray = excerciseDataArray;
         mContext = context;
-        mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampAppExercise";
+        mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampApp/Exercise/";
 
         File storageDir = new File(mImageDirPath);
 
@@ -68,7 +68,7 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
         if (exerciseData == null)
             return;
 
-        String startTimeCode = Long.toString(exerciseData.getStartTimeMilli());
+        final String startTimeCode = Long.toString(exerciseData.getStartTimeMilli());
         String imagePath = null;
         for (String path : mImagePaths) {
             if (path.contains(startTimeCode)) {
@@ -78,21 +78,19 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
         }
 
         if (imagePath != null) {
-            holder.image.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+            holder.image.setImageBitmap(BitmapFactory.decodeFile(mImageDirPath + imagePath));
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) mContext).getImageArrayList();
-
+                    ((MainActivity) mContext).startSelectImage(startTimeCode);
                 }
             });
         }
         holder.date.setText(exerciseData.getMonthString() + "/" + exerciseData.getDayString());
         holder.time.setText(exerciseData.getHourString() + ":" + exerciseData.getMinString());
         holder.calorie.setText(exerciseData.getCalorieString() + " kcal");
-
     }
 
     @Override
@@ -116,39 +114,4 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
             add = itemView.findViewById(R.id.add);
         }
     }
-
-//    public Bitmap getScaledImage() {
-//        if (mScaledImage == null)
-//            try {
-//                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//                bmOptions.inJustDecodeBounds = true;
-//
-//                /* Get the dimensions of the bitmap */
-//                BitmapFactory.decodeFile(mAbsolutePath, bmOptions);
-//                int imageHeight = bmOptions.outHeight;
-//                int imageWidth = bmOptions.outWidth;
-//
-//                /* Get the SCALE_FACTOR that is a power of 2 and
-//                    keeps both height and width larger than CELL_SIZE. */
-//                int scaleFactor = 1;
-//                if (imageHeight > mHieght || imageWidth > mWidth) {
-//                    final int halfHeight = imageHeight / 2;
-//                    final int halfWidth = imageWidth / 2;
-//
-//                    while ((halfHeight / scaleFactor) >= mHieght
-//                            && (halfWidth / scaleFactor) >= mWidth) {
-//                        scaleFactor *= 2;
-//                    }
-//                }
-//
-//                /* Decode the image file into a Bitmap sized to fill the View */
-//                bmOptions.inJustDecodeBounds = false;
-//                bmOptions.inSampleSize = scaleFactor;
-//
-//                mScaledImage = rotateImage(BitmapFactory.decodeFile(mAbsolutePath, bmOptions));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        return mScaledImage;
-//    }
 }

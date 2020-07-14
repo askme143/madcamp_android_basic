@@ -3,6 +3,7 @@ package com.example.practice;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 .OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                selectingImage = false;
                 switch (menuItem.getItemId()){
                     case R.id.tab1:{
                         getSupportFragmentManager().beginTransaction()
@@ -116,7 +118,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Image> getImageArrayList() {
-        return fragment2.getImageArrayList();
+    public boolean selectingImage = false;
+    public String startTimeID;
+
+    public boolean isSelection() {
+        return selectingImage;
+    }
+
+    public void startSelectImage(String id) {
+        selectingImage = true;
+        startTimeID = id;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment2).commitAllowingStateLoss();
+    }
+
+    public void finishSelectImage(Image image) {
+        image.saveExerciseImage(startTimeID);
+        selectingImage = false;
+        startTimeID = null;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment3).commitAllowingStateLoss();
     }
 }

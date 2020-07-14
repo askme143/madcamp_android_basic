@@ -5,28 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.text.Layout;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import com.example.practice.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
-
 
 public class ImageSelectAdapter extends BaseAdapter {
     private Context mContext;
@@ -36,7 +28,7 @@ public class ImageSelectAdapter extends BaseAdapter {
     Bitmap check;
     SparseBooleanArray checked = new SparseBooleanArray();
 
-    public ImageSelectAdapter(Context c, int cellSize, ArrayList<Image> imageArrayList, boolean multiChoose){
+    public ImageSelectAdapter(Context c, int cellSize, ArrayList<Image> imageArrayList){
         mContext = c;
         mCellSize = cellSize;
         mImageArrayList = imageArrayList;

@@ -173,7 +173,7 @@ public class StepHolder extends HealthHolder {
                         String get_STEPDATA = getPREFERENCE("step_data");
 
                         int goal_step_pref = 6000;
-                        if (get_STEPDATA != null)
+                        if (get_STEPDATA != null && get_STEPDATA.length() > 0)
                             goal_step_pref = Integer.parseInt(get_STEPDATA);
                         if (goal_step_pref == 0)
                             goal_step_pref = 6000;
