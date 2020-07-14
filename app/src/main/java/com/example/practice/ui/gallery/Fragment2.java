@@ -262,4 +262,8 @@ public class Fragment2 extends Fragment {
          }
         );
     }
+
+    public ArrayList<Image> getImageArrayList() {
+        return mImageArrayList;
+    }
 }

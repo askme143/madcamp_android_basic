@@ -1,51 +1,55 @@
 package com.example.practice.ui.health;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.provider.ContactsContract;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.practice.MainActivity;
 import com.example.practice.R;
-import com.example.practice.ui.contacts.CustomAdapter;
-import com.samsung.android.sdk.healthdata.HealthData;
-import com.samsung.android.sdk.healthdata.HealthDataResolver;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.lang.reflect.Array;
 
 public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAdapter.HealthExerciseViewHolder> {
-    private long[] mStartTimeMilliArray;
+    private ExerciseData[] mExcerciseDataArray;
+    private Context mContext;
+    private String mImageDirPath;
+    private String[] mImagePaths;
 
-    public HealthExerciseAdapter(long[] pStartTimeMilliArray) {
-        mStartTimeMilliArray = pStartTimeMilliArray;
+    public HealthExerciseAdapter(Context context, ExerciseData[] excerciseDataArray) {
+        mExcerciseDataArray = excerciseDataArray;
+        mContext = context;
+        mImageDirPath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString() + "/MadCampAppExercise";
+
+        File storageDir = new File(mImageDirPath);
+
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        mImagePaths = storageDir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String s) {
+                boolean bOK = false;
+                if(s.toLowerCase().endsWith(".jpg")) bOK = true;
+
+                return bOK;
+            }
+        });
     }
 
     @NonNull
@@ -60,23 +64,35 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HealthExerciseViewHolder holder, int position) {
-        long startTimeMilli = mStartTimeMilliArray[position];
+        ExerciseData exerciseData = mExcerciseDataArray[position];
+        if (exerciseData == null)
+            return;
 
+        String startTimeCode = Long.toString(exerciseData.getStartTimeMilli());
+        String imagePath = null;
+        for (String path : mImagePaths) {
+            if (path.contains(startTimeCode)) {
+                imagePath = path;
+                break;
+            }
+        }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(startTimeMilli);
-        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        if (imagePath != null) {
+            holder.image.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+            holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        } else {
+            holder.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity) mContext).getImageArrayList();
 
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+                }
+            });
+        }
+        holder.date.setText(exerciseData.getMonthString() + "/" + exerciseData.getDayString());
+        holder.time.setText(exerciseData.getHourString() + ":" + exerciseData.getMinString());
+        holder.calorie.setText(exerciseData.getCalorieString() + " kcal");
 
-        String stringHour = hour < 10 ? "0" + hour : hour + "";
-        String stringMinute = minute < 10 ? "0" + minute : minute + "";
-
-        holder.date.setText(month + "/" + day);
-        holder.time.setText(stringHour + ":" + stringMinute);
     }
 
     @Override
@@ -85,13 +101,54 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
     }
 
     public class HealthExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView date, time;
+        TextView date, time, calorie, add;
+        ImageView image;
 
         public HealthExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
 
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
+            calorie = itemView.findViewById(R.id.calorie);
+
+            image = itemView.findViewById(R.id.image);
+
+            add = itemView.findViewById(R.id.add);
         }
     }
+
+//    public Bitmap getScaledImage() {
+//        if (mScaledImage == null)
+//            try {
+//                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//                bmOptions.inJustDecodeBounds = true;
+//
+//                /* Get the dimensions of the bitmap */
+//                BitmapFactory.decodeFile(mAbsolutePath, bmOptions);
+//                int imageHeight = bmOptions.outHeight;
+//                int imageWidth = bmOptions.outWidth;
+//
+//                /* Get the SCALE_FACTOR that is a power of 2 and
+//                    keeps both height and width larger than CELL_SIZE. */
+//                int scaleFactor = 1;
+//                if (imageHeight > mHieght || imageWidth > mWidth) {
+//                    final int halfHeight = imageHeight / 2;
+//                    final int halfWidth = imageWidth / 2;
+//
+//                    while ((halfHeight / scaleFactor) >= mHieght
+//                            && (halfWidth / scaleFactor) >= mWidth) {
+//                        scaleFactor *= 2;
+//                    }
+//                }
+//
+//                /* Decode the image file into a Bitmap sized to fill the View */
+//                bmOptions.inJustDecodeBounds = false;
+//                bmOptions.inSampleSize = scaleFactor;
+//
+//                mScaledImage = rotateImage(BitmapFactory.decodeFile(mAbsolutePath, bmOptions));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        return mScaledImage;
+//    }
 }

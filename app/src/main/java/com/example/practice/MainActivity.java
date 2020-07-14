@@ -14,10 +14,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.practice.ui.contacts.Fragment1;
+import com.example.practice.ui.gallery.Image;
 import com.example.practice.ui.health.Fragment3;
 import com.example.practice.ui.gallery.Fragment2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -110,5 +114,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             startFragment();
         }
+    }
+
+    public ArrayList<Image> getImageArrayList() {
+        return fragment2.getImageArrayList();
     }
 }

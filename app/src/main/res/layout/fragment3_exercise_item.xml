@@ -28,6 +28,7 @@
         />
 
     <TextView
+        android:id="@+id/add"
         android:layout_width="160dp"
         android:layout_height="170dp"
         android:text="+Add"
@@ -60,9 +61,8 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-
-
     <TextView
+        android:id="@+id/calorie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="18 kcal"

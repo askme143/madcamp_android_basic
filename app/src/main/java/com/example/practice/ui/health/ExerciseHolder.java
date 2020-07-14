@@ -57,17 +57,13 @@ public class ExerciseHolder extends HealthHolder {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onResult(HealthDataResolver.ReadResult healthData) {
-                    long[] startTimeMilliArray = new long[10];
-                    String[] friendArray = new String[10];
+                    ExerciseData[] exerciseDatas = new ExerciseData[10];
                     int count = 0;
 
                     try {
-                        System.out.println("Receive result. Start to get exercise data.");
                         for (HealthData data: healthData) {
-                            System.out.println(count);
-                            startTimeMilliArray[count] = data.getLong(HealthConstants.Exercise.START_TIME);
-                            friendArray[count] = data.getString(HealthConstants.Exercise.COMMENT);
-                            if (++count > 9)
+                            exerciseDatas[count++] = new ExerciseData(data);
+                            if (count > 9)
                                 break;
                         }
                     } finally {
@@ -75,7 +71,7 @@ public class ExerciseHolder extends HealthHolder {
 
                         mRecyclerView.setLayoutManager(mLayoutManager);
 
-                        HealthExerciseAdapter healthExerciseAdapter = new HealthExerciseAdapter(startTimeMilliArray);
+                        HealthExerciseAdapter healthExerciseAdapter = new HealthExerciseAdapter(mContext, exerciseDatas);
                         mRecyclerView.setAdapter(healthExerciseAdapter);
                     }
                 }
