@@ -20,7 +20,6 @@ import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
 public class ExerciseHolder extends HealthHolder {
     private static final int type = 2;
-
     private Context mContext;
 
     private HealthDataStore mStore;
@@ -28,8 +27,9 @@ public class ExerciseHolder extends HealthHolder {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public ExerciseHolder (HealthDataStore store) {
+    public ExerciseHolder (HealthDataStore store, Context context) {
         mStore = store;
+        mContext = context;
     }
 
     @Override

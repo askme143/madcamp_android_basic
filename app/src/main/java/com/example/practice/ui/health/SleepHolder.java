@@ -28,6 +28,7 @@ import java.util.TimeZone;
 
 public class SleepHolder extends HealthHolder {
     private static final int type = 1;
+    private Context mContext;
 
     private int mSleepTimeGoal;
     private int mStartOffset;
@@ -40,8 +41,9 @@ public class SleepHolder extends HealthHolder {
 
     float dp;
 
-    public SleepHolder(HealthDataStore store) {
+    public SleepHolder(HealthDataStore store, Context context) {
         mStore = store;
+        mContext = context;
 
         int startHour = 23;
         int startMin = 0;
