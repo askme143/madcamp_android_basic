@@ -181,7 +181,7 @@ public class StepHolder extends HealthHolder {
                         mStepPercent.setText((totalStep * 100) / goal_step_pref + "%");
                         mStepCount.setText(totalStep + "");
                         mStepProgress.setProgress((totalStep * 100) / goal_step_pref == 0 ? 1 : (totalStep * 100) / goal_step_pref);
-                        mStepGoal.setText("/ "+get_STEPDATA+" steps");
+                        mStepGoal.setText("/ "+goal_step_pref+" steps");
 
                         mStepBarChart.clearChart();
                         for (int i = 0; i < 12; i++) {
