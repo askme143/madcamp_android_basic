@@ -16,8 +16,8 @@ Photos taken in this app are not affected by other apps.
 
 TAB3 
 [Health]
-This tab shows some health information(step count, sleep time, exercise history). 
+This tab shows some health information(step count, sleep time, exercise history) from samsung health. 
 When you click the edit button, you can set the goals about step count and sleep time.
-Step count box shows how many steps you walk everyday and the ratio(counts/goal).
+Step count box shows how many steps you walk everyday and the ratio(counts/goal). The information updated realtime when you walk.
 Sleep time box shows the bar graph based on the goal time you set.
 Exercise stroy box shows history of your exercise. You can add the picture of that time if you click +add button.
