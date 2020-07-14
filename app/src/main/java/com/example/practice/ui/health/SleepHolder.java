@@ -53,9 +53,9 @@ public class SleepHolder extends HealthHolder {
     private TextView mSleepStartGoal;
     private TextView mSleepFinishGoal;
 
-    private int[] mStartTimes = new int[5];
-    private int[] mEndTimes = new int[5];
-    private int[] mSleepTimes = new int[5];
+    private long[] mStartTimes = new long[5];
+    private long[] mEndTimes = new long[5];
+    private long[] mDayStartTimes = new long[5];
 
     int startHour = 23;
     int startMin = 0;
@@ -164,9 +164,9 @@ public class SleepHolder extends HealthHolder {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onResult(HealthDataResolver.ReadResult healthData) {
-                    mStartTimes = new int[5];
-                    mEndTimes = new int[5];
-                    mSleepTimes = new int[5];
+                    mDayStartTimes = new long[5];
+                    mStartTimes = new long[5];
+                    mEndTimes = new long[5];
                     int count = 4;
 
                     try {
@@ -184,12 +184,9 @@ public class SleepHolder extends HealthHolder {
                             if (count < 0)
                                 break;
 
-                            int startTime = Math.max((int) (startMilli - dayStart - mStartOffset), 0);
-                            int endTime = Math.min ((int) (endMilli - dayStart - mStartOffset), mSleepTimeGoal * 2);
-
-                            mStartTimes[count] = startTime;
-                            mEndTimes[count] = endTime;
-                            mSleepTimes[count] = (int) (endMilli - startMilli);
+                            mDayStartTimes[count] = dayStart;
+                            mStartTimes[count] = startMilli;
+                            mEndTimes[count] = endMilli;
 
                             dayStart -= ONE_DAY_IN_MILLIS;
                             if (--count < 0)
@@ -238,7 +235,14 @@ public class SleepHolder extends HealthHolder {
     /* Draw bar chart. This function is dependent on mRdResult. */
     private void drawSleepTimeBar() {
         for (int i = 0; i < 5; i++) {
-            int sleepTimeInPeriod = mEndTimes[i] - mStartTimes[i];
+            long startMilli = mStartTimes[i];
+            long endMilli = mEndTimes[i];
+            long dayStart = mDayStartTimes[i];
+
+            int startTime = Math.max((int) (startMilli - dayStart - mStartOffset), 0);
+            int endTime = Math.min ((int) (endMilli - dayStart - mStartOffset), mSleepTimeGoal * 2);
+
+            int sleepTimeInPeriod = endTime - startTime;
 
             View sleepTimeBar = mSleepTimeBarList.get(i);
 
@@ -248,11 +252,11 @@ public class SleepHolder extends HealthHolder {
 
             ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams)
                     sleepTimeBar.getLayoutParams();
-            marginParams.setMargins(0, (int) (mStartTimes[i] * dp / (mSleepTimeGoal * 2 / 120)), 0, 0);
+            marginParams.setMargins(0, (int) (startTime * dp / (mSleepTimeGoal * 2 / 120)), 0, 0);
             sleepTimeBar.requestLayout();
         }
 
-        int sleepTime = mSleepTimes[4];
+        int sleepTime = (int) (mStartTimes[4] - mEndTimes[4]);
         int hour =  sleepTime / 1000 / 60 / 60;
         int minute = (sleepTime / 1000 / 60) % 60;
 
