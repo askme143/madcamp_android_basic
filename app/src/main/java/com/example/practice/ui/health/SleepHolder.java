@@ -256,7 +256,7 @@ public class SleepHolder extends HealthHolder {
             sleepTimeBar.requestLayout();
         }
 
-        int sleepTime = (int) (mStartTimes[4] - mEndTimes[4]);
+        int sleepTime = (int) (mEndTimes[4] - mStartTimes[4]);
         int hour =  sleepTime / 1000 / 60 / 60;
         int minute = (sleepTime / 1000 / 60) % 60;
 

@@ -21,6 +21,7 @@ import android.content.Intent;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import android.widget.AdapterView.OnItemClickListener;
@@ -249,11 +250,13 @@ public class Fragment2 extends Fragment {
                  click_enable = 0;
                  final ImageSelectAdapter deleteAdapter = new ImageSelectAdapter(mContext, mCellSize, mImageArrayList);
                  mGridView.setAdapter(deleteAdapter);
+                 mFloatButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.trash));
 
                  final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                      @Override
                      public void handleOnBackPressed() {
                          mGridView.setAdapter(mImageAdapter);
+                         mFloatButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.camera));
 
                          click_enable = 1;
                          mFloatButton.setOnClickListener(new View.OnClickListener() {
@@ -273,6 +276,8 @@ public class Fragment2 extends Fragment {
                      public void onClick(View view) {
                          deleteAdapter.deleteChecked();
                          mGridView.setAdapter(mImageAdapter);
+                         mFloatButton.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.camera));
+
 
                          click_enable = 1;
                          mFloatButton.setOnClickListener(new View.OnClickListener() {

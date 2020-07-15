@@ -78,9 +78,11 @@ public class HealthExerciseAdapter extends RecyclerView.Adapter<HealthExerciseAd
         }
 
         if (imagePath != null) {
+            System.out.println(position);
             holder.image.setImageBitmap(BitmapFactory.decodeFile(mImageDirPath + imagePath));
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
+            holder.image.setImageDrawable(mContext.getDrawable(R.drawable.dotted_rectangle));
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
