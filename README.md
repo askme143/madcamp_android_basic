@@ -1,4 +1,4 @@
-# madcamp_android_basic
+# Madcamp Project 1: Health Manager
 TAB1
 [Contacts]
 This tab contains contact list with retrieve function and buttons connected to dial and msg app.
