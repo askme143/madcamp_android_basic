@@ -7,8 +7,7 @@ This code doesn't work on Samsung Health with version >= 6.11. See [Notice](#Not
 This tab contains contact list with retrieve function and buttons connected to dial and msg app.
 When you click the contact item the hidden item shows up.
 
-<img src="/sample-images/contact_1.jpg" width="40%">
-<img src="/sample-images/contact_2.jpg" width="40%">
+<img src="/sample-images/contact_1.jpg" width="45%"> <img src="/sample-images/contact_2.jpg" width="45%">
 
 ## TAB2: Gallery
 
@@ -28,7 +27,7 @@ Step count box shows how many steps you walk everyday and the ratio(counts/goal)
 Sleep time box shows the bar graph based on the goal time you set.
 Exercise stroy box shows history of your exercise. You can add the picture of that time if you click +add button.
 
-![health-tab-1](/sample-images/health_tab_1.jpg)![health-tab-2](/sample-images/health_tab_2.jpg)
+<img src="/sample-images/health_tab_1.jpg" width="45%"> <img src="/sample-images/health_tab_2.jpg" width="45%">
 
 ## Notice
 
