@@ -18,7 +18,7 @@ You can view the selection mode by holding down the image in the gallery for a w
 Pressing the camera-shaped floating button in the default mode instead of the select mode becomes the filming mode. Photos taken at this time are immediately reflected in the gallery.
 Photos taken in this app are not affected by other apps.
 
-<img src="/sample-images/gallery_1.jpg" width="50%"><img src="/sample-images/gallery_2.jpg" width="50%">
+<img src="/sample-images/gallery_1.jpg" width="45%"> <img src="/sample-images/gallery_2.jpg" width="45%">
 
 ## TAB3: Health
 
