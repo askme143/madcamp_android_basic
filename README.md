@@ -1,5 +1,7 @@
 # Madcamp Project 1: Health Manager
 
+This code doesn't work on Samsung Health with version >= 6.11. See [Notice](#Notice)
+
 ## TAB1: Contacts
 
 This tab contains contact list with retrieve function and buttons connected to dial and msg app.
@@ -26,3 +28,7 @@ Sleep time box shows the bar graph based on the goal time you set.
 Exercise stroy box shows history of your exercise. You can add the picture of that time if you click +add button.
 ![health-tab-1](/sample-images/health_tab_1.jpg)
 ![health-tab-2](/sample-images/health_tab_2.jpg)
+
+## Notice
+
+There was an update on Samsung Health and Samsung Health SDK. Now this code doesn't work on Samsung Health with version >= 6.11
