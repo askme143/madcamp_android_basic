@@ -7,7 +7,8 @@ This code doesn't work on Samsung Health with version >= 6.11. See [Notice](#Not
 This tab contains contact list with retrieve function and buttons connected to dial and msg app.
 When you click the contact item the hidden item shows up.
 
-![contact-1](/sample-images/contact_1.jpg)![contact-2](/sample-images/contact_2.jpg)
+<img src="/sample-images/contact_1.jpg" width="40%">
+<img src="/sample-images/contact_2.jpg" width="40%">
 
 ## TAB2: Gallery
 
@@ -17,7 +18,7 @@ You can view the selection mode by holding down the image in the gallery for a w
 Pressing the camera-shaped floating button in the default mode instead of the select mode becomes the filming mode. Photos taken at this time are immediately reflected in the gallery.
 Photos taken in this app are not affected by other apps.
 
-![gallery-1](/sample-images/gallery_1.jpg)![gallery-2](/sample-images/gallery_2.jpg)
+<img src="/sample-images/gallery_1.jpg" width="50%"><img src="/sample-images/gallery_2.jpg" width="50%">
 
 ## TAB3: Health
 
